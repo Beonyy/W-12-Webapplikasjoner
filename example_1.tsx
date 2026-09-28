@@ -1,6 +1,5 @@
 // Forslag til datatyper og tiltenkt bruk/backend API (ikke rest, altså)
 
-
 // frontend
 type Animal = {
     name : string;
