@@ -6,10 +6,6 @@ export type Animal = {
     traits: string[];
     housingUnit : string;
     contactInfo: string;
-    profileImage: AnimalImage;
+    profileImageUrl: string;
     // more here, maybe
-}
-
-export type AnimalImage = {
-    url: string;
 }

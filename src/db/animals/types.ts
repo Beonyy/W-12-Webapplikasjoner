@@ -6,5 +6,5 @@ export type AnimalDb = {
     traits: string;
     housingUnit: string;
     contactInfo: string;
-    profileImageKey: string;
+    profileImageUrl: string;
 }

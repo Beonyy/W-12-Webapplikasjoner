@@ -10,9 +10,7 @@ export function toAnimal(animalDb: AnimalDb): Animal {
         traits: animalDb.traits.split(","),
         housingUnit: animalDb.housingUnit,
         contactInfo: animalDb.contactInfo,
-        profileImage: {
-            url: animalDb.profileImageKey
-        },
+        profileImageUrl: animalDb.profileImageUrl
     }
 }
 
@@ -25,7 +23,7 @@ export function toAnimalDb(animal: Animal): AnimalDb {
         traits: animal.traits.join(","),
         housingUnit: animal.housingUnit,
         contactInfo: animal.contactInfo,
-        profileImageKey: animal.profileImage.url,
+        profileImageUrl: animal.profileImageUrl,
     }
 }
 
