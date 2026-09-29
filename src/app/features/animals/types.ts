@@ -1,14 +1,15 @@
-
 export type Animal = {
     name : string;
     kind: string;
     nickname: string;
     dateOfBirth : Date;
-    traits: string;
+    traits: string[];
     housingUnit : string;
     contactInfo: string;
-    bilder: AnimalImage[];
+    profileImage: AnimalImage;
     // more here, maybe
 }
 
-export type AnimalImage = {}
+export type AnimalImage = {
+    url: string;
+}
