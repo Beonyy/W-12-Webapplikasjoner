@@ -1,11 +1,12 @@
 export type Animal = {
-    name : string;
+    id: number;
+    name: string;
     kind: string;
-    nickname: string;
-    dateOfBirth : Date;
-    traits: string[];
+    nickname?: string | null;
+    dateOfBirth?: Date | null;
+    traits?: string[] | null;
     housingUnit : string;
-    contactInfo: string;
-    profileImageUrl: string;
+    contactInfo?: string | null;
+    profileImageUrl?: string | null;
     // more here, maybe
 }

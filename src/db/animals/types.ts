@@ -1,10 +1,11 @@
 export type AnimalDb = {
+    id: number;
     name: string;
     kind: string;
-    nickname: string;
-    dateOfBirth: string;
-    traits: string;
+    nickname?: string | null;
+    dateOfBirth: string | null;
+    traits: string | null;
     housingUnit: string;
-    contactInfo: string;
-    profileImageUrl: string;
+    contactInfo: string | null;
+    profileImageUrl: string | null;
 }
