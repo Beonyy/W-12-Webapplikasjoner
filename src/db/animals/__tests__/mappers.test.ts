@@ -1,4 +1,4 @@
-import { describe, test, expect, it } from "vitest";
+import { describe, test, expect } from "vitest";
 import type { Animal } from "../../../app/features/animals/types";
 import type { AnimalDb } from "../types";
 import { toAnimal, toAnimalDb } from "../mappers";
