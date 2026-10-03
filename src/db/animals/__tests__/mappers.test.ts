@@ -62,7 +62,7 @@ describe("toAnimalDb", () => {
 
         const result: AnimalDb = toAnimalDb(animal);
 
-        expect(result.dateOfBirth).toEqual(date.toISOString())
+        expect(result.dateOfBirth).toBe(date.toISOString())
     });
 
     test ("converts array to comma-separated string", () => {
@@ -71,7 +71,7 @@ describe("toAnimalDb", () => {
 
         const result: AnimalDb = toAnimalDb(animal);
 
-        expect(result.traits).toEqual("spotted belly,white tail tip");
+        expect(result.traits).toBe("spotted belly,white tail tip");
     });
 
     test ("converts undefined nickname to null", () => {
