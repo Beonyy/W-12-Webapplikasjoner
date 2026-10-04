@@ -1,14 +1,10 @@
-import { time } from "node:console";
-import { success } from "zod";
-
+//basert på  https://fullstaekk.no/courses/webapp-2025/lessons/rest-api-prinsipper
 
 // temp
 enum Errors {
     METHOD_NOT_ALLOWED
 }
 
-
-//basert på  https://fullstaekk.no/courses/webapp-2025/lessons/rest-api-prinsipper
 export function methodNotAllowedResponse(allowedMethods: string[]){
     return new Response(
         JSON.stringify({

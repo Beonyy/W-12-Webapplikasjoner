@@ -1,3 +1,4 @@
+// from https://fullstaekk.no/courses/webapp-2025/lessons/fetch-arkitektur
 import type { ResultFn } from "@/app/types/result";
 import { Errors } from "@/app/types/errors";
 
