@@ -5,7 +5,7 @@ import { animalTable } from "./schema";
 import { db } from "../index";
 import { eq } from "drizzle-orm";
 
-export async function createAnimal(animal: Animal): Promise<void> {
+export async function insertAnimal(animal: Animal): Promise<void> {
     const animalDb = toAnimalDb(animal);
 
     await db.insert(animalTable).values(animalDb)
