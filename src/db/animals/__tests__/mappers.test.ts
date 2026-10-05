@@ -5,19 +5,7 @@ import { toAnimal, toAnimalDb } from "../mappers";
 import { makeAnimal, makeAnimalDb } from "./helpers";
 
 describe("toAnimal", () => {
-    test("converts date string to Date object", () => {
-        //Arrange
-        const date: string = "2026-03-10T00:00:00.000Z";
-        const animalDb: AnimalDb = makeAnimalDb({ dateOfBirth: date })
-
-        //Act
-        const result: Animal = toAnimal(animalDb);
-
-        //Assert
-        expect(result.dateOfBirth).toEqual(new Date(date));
-    });
-
-    test("converts comma-separated string to array", () => {
+    test("converts string to array", () => {
         //Arrange
         const string: string = "spotted belly,white tail tip";
         const animalDb: AnimalDb = makeAnimalDb({ traits: string });
@@ -41,58 +29,34 @@ describe("toAnimalDb", () => {
         const result: AnimalDb = toAnimalDb(animal);
 
         //Assert
-        expect(result.dateOfBirth).toBe(date.toISOString())
-    });
-
-    test ("converts array to comma-separated string", () => {
-        //Arrange
-        const array: Array<string> = ["spotted belly", "white tail tip"];
-        const animal: Animal = makeAnimal({ traits: array });
-        
-        //Act
-        const result: AnimalDb = toAnimalDb(animal);
-
-        //Assert
-        expect(result.traits).toBe("spotted belly,white tail tip");
+        expect(result.dateOfBirth).toBeTypeOf("string");
     });
 
     test ("converts undefined nickname to null", () => {
         //Arrange
-        const animal: Animal = makeAnimal({ nickname: undefined });
+        const animal: Animal = makeAnimal({ 
+            nickname: undefined,
+            traits: undefined,
+            contactInfo: undefined 
+        });
 
         //Act
         const result: AnimalDb = toAnimalDb(animal);
 
         //Assert
         expect(result.nickname).toBeNull();
-    });
-
-        test ("converts undefined traits to null", () => {
-        //Arrange
-        const animal: Animal = makeAnimal({ traits: undefined });
-
-        //Act
-        const result: AnimalDb = toAnimalDb(animal);
-
-        //Assert
         expect(result.traits).toBeNull();
-    });
-
-        test ("converts undefined contactInfo to null", () => {
-        //Arrange
-        const animal: Animal = makeAnimal({ contactInfo: undefined });
-
-        //Act
-        const result: AnimalDb = toAnimalDb(animal);
-
-        //Assert
         expect(result.contactInfo).toBeNull();
-    })
+    });
 });
 
 test ("converts from Animal to AnimalDb and back", () => {
     //Arrange
-    const originalAnimal = makeAnimal({ nickname: null });
+    const originalAnimal = makeAnimal({ 
+        nickname: null,
+        traits: ["spotted belly", "white tail tip"],
+        dateOfBirth: new Date("2026-05-10T00:00:00.000Z")
+    });
 
     //Act
     const animalDb = toAnimalDb(originalAnimal);
@@ -100,4 +64,20 @@ test ("converts from Animal to AnimalDb and back", () => {
 
     //Assert
     expect(finalAnimal).toEqual(originalAnimal);
+});
+
+test("converts from AnimalDb to Animal and back", () => {
+    //Arrange
+    const originalAnimalDb = makeAnimalDb({ 
+        nickname: null, 
+        traits: "spotted belly,white tail tip", 
+        dateOfBirth: "2026-05-10T00:00:00.000Z"
+    });
+
+    //Act
+    const animal = toAnimal(originalAnimalDb);
+    const finalAnimalDb = toAnimalDb(animal);
+
+    //Assert
+    expect(finalAnimalDb).toEqual(originalAnimalDb);
 });

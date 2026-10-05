@@ -1,13 +1,13 @@
 export type Animal = {
     id: number;
     name: string;
-    kind: string;
+    kind: string; //Enum
     nickname?: string | null;
     dateOfBirth?: Date | null;
     traits?: string[] | null;
-    housingUnit : string;
+    housingUnit: string;
     contactInfo?: string | null;
     profileImageUrl?: string | null;
-    // more here, maybe
-    
+    // more here, maybe   
 }
+

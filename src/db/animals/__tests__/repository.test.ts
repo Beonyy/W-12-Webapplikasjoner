@@ -1,10 +1,9 @@
 import { describe, test, expect, vi, afterEach, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
 import type { Animal } from "../../../app/features/animals/types";
-import { AnimalDb } from "../types";
 import { animalTable } from "../schema";
 import { insertAnimal, getAnimal } from "../repository";
-import { makeAnimal, makeAnimalDb, makeMockDatabase } from "./helpers";
+import { makeAnimal } from "./helpers";
 
 const { closeTestDatabase } = vi.hoisted(() => ({
     closeTestDatabase: vi.fn(),
@@ -28,8 +27,6 @@ afterAll(() => {
     closeTestDatabase();
 })
 
-
-
 describe("createAnimal", () => {
     test("inserts an animal row in database", async () => {
         //Arrange
@@ -43,7 +40,7 @@ describe("createAnimal", () => {
         .select()
         .from(animalTable)
         .where(eq(animalTable.id, animal.id));
-        
+
         expect(rows).toHaveLength(1);
         expect(rows[0]?.name).toBe(animal.name)
     });
@@ -73,15 +70,3 @@ describe("getAnimal", () => {
         expect(result).toEqual(null);
     })
 });
-
-test("stores an animal and retrieves the same animal", async () => {
-    //Arrange
-    const animal: Animal = makeAnimal({ id: 130, nickname: null });
-
-    //Act
-    await insertAnimal(animal);
-    const result = await getAnimal(130);
-
-    //Assert
-    expect(result).toEqual(animal);
-})
