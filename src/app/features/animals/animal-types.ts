@@ -3,7 +3,7 @@ export type Animal = {
     name : string;
     kind: string;
     nickname: string;
-    dateOfBirth : Date;
+    dateOfBirth : string;
     traits: string;
     housingUnit : string;
     contactInfo: string;

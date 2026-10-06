@@ -15,12 +15,12 @@ export const Errors = {
 export type ErrorCode = keyof typeof Errors;
 
 // Base error structure
-type Err = {
+type Error = {
   code: ErrorCode;
   message: string;
 };
 
 export type ResultError = {
   success: false;
-  error: Err;
+  error: Error;
 };
