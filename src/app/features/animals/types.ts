@@ -1,10 +1,10 @@
 export type Animal = {
     id: number;
     name: string;
-    kind: string; //Enum
+    species: string; //Enum
     nickname?: string | null;
     dateOfBirth?: Date | null;
-    traits?: string[] | null;
+    characteristics?: string[] | null;
     housingUnit: string;
     contactInfo?: string | null;
     profileImageUrl?: string | null;

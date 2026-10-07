@@ -1,0 +1,114 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "2b48a6e3-1154-434c-b266-ccd9f95d0895",
+  "prevIds": [
+    "a86d3d89-a64d-4337-a79a-bcd362c771f7"
+  ],
+  "ddl": [
+    {
+      "name": "animals",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "animalId",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "species",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "nickname",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "dateOfBirth",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "characteristics",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "housingUnit",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "contactInfo",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "profileImageUrl",
+      "entityType": "columns",
+      "table": "animals"
+    },
+    {
+      "columns": [
+        "animalId"
+      ],
+      "nameExplicit": false,
+      "name": "animals_pk",
+      "table": "animals",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

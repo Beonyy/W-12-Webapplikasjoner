@@ -5,10 +5,10 @@ export function toAnimal(animalDb: AnimalDb): Animal {
     return {
         id: animalDb.id,
         name: animalDb.name,
-        kind: animalDb.kind,
+        species: animalDb.species,
         nickname: animalDb.nickname,
         dateOfBirth: animalDb.dateOfBirth ? new Date (animalDb.dateOfBirth) : null,
-        traits: animalDb.traits ? animalDb.traits.split(",") : null,
+        characteristics: animalDb.characteristics ? animalDb.characteristics.split(",") : null,
         housingUnit: animalDb.housingUnit,
         contactInfo: animalDb.contactInfo,
         profileImageUrl: animalDb.profileImageUrl
@@ -19,10 +19,10 @@ export function toAnimalDb(animal: Animal): AnimalDb {
     return {
         id: animal.id,
         name: animal.name,
-        kind: animal.kind,
+        species: animal.species,
         nickname: animal.nickname ?? null,
         dateOfBirth: animal.dateOfBirth ? animal.dateOfBirth.toISOString() : null,
-        traits: animal.traits ? animal.traits.join(",") : null,
+        characteristics: animal.characteristics ? animal.characteristics.join(",") : null,
         housingUnit: animal.housingUnit,
         contactInfo: animal.contactInfo ? animal.contactInfo : null,
         profileImageUrl: animal.profileImageUrl ? animal.profileImageUrl : null,

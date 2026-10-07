@@ -8,13 +8,13 @@ describe("toAnimal", () => {
     test("converts string to array", () => {
         //Arrange
         const string: string = "spotted belly,white tail tip";
-        const animalDb: AnimalDb = makeAnimalDb({ traits: string });
+        const animalDb: AnimalDb = makeAnimalDb({ characteristics: string });
 
         //Act
         const result: Animal = toAnimal(animalDb);
 
         //Assert
-        expect(result.traits).toEqual(["spotted belly", "white tail tip"]);
+        expect(result.characteristics).toEqual(["spotted belly", "white tail tip"]);
     });
 
 });
@@ -36,7 +36,7 @@ describe("toAnimalDb", () => {
         //Arrange
         const animal: Animal = makeAnimal({ 
             nickname: undefined,
-            traits: undefined,
+            characteristics: undefined,
             contactInfo: undefined 
         });
 
@@ -45,7 +45,7 @@ describe("toAnimalDb", () => {
 
         //Assert
         expect(result.nickname).toBeNull();
-        expect(result.traits).toBeNull();
+        expect(result.characteristics).toBeNull();
         expect(result.contactInfo).toBeNull();
     });
 });
@@ -54,7 +54,7 @@ test ("converts from Animal to AnimalDb and back", () => {
     //Arrange
     const originalAnimal = makeAnimal({ 
         nickname: null,
-        traits: ["spotted belly", "white tail tip"],
+        characteristics: ["spotted belly", "white tail tip"],
         dateOfBirth: new Date("2026-05-10T00:00:00.000Z")
     });
 
@@ -70,7 +70,7 @@ test("converts from AnimalDb to Animal and back", () => {
     //Arrange
     const originalAnimalDb = makeAnimalDb({ 
         nickname: null, 
-        traits: "spotted belly,white tail tip", 
+        characteristics: "spotted belly,white tail tip", 
         dateOfBirth: "2026-05-10T00:00:00.000Z"
     });
 

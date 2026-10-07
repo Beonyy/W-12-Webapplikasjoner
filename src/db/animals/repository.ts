@@ -1,5 +1,4 @@
 import type { Animal } from "../../app/features/animals/types";
-import { AnimalDb } from "./types";
 import { toAnimalDb, toAnimal } from "./mappers";
 import { animalTable } from "./schema";
 import { db } from "../index";

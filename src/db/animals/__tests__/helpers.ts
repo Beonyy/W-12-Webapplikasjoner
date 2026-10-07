@@ -12,10 +12,10 @@ export function makeMockDatabase() {
         CREATE TABLE animals (
         animalId INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        kind TEXT NOT NULL,
+        species TEXT NOT NULL,
         nickname TEXT,
         dateOfBirth TEXT,
-        traits TEXT,
+        characteristics TEXT,
         housingUnit TEXT NOT NULL,
         contactInfo TEXT,
         profileImageUrl TEXT      
@@ -33,10 +33,10 @@ export function makeAnimal(overrides: Partial<Animal> = {}): Animal {
        return {
             id: 1,
             name: "Napolion",
-            kind: "cat",
+            species: "cat",
             nickname: undefined,
             dateOfBirth: null,
-            traits: null,
+            characteristics: null,
             housingUnit: "H1404",
             contactInfo: null,
             profileImageUrl: null,
@@ -48,10 +48,10 @@ export function makeAnimalDb(overrides: Partial<AnimalDb> = {}): AnimalDb {
     return {
         id: 1,
         name: "Napolion",
-        kind: "cat",
+        species: "cat",
         nickname: null,
         dateOfBirth: null,
-        traits: null,
+        characteristics: null,
         housingUnit: "H1404",
         contactInfo: null,
         profileImageUrl: null,
