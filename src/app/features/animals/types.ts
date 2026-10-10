@@ -1,5 +1,5 @@
 export type Animal = {
-    id: number;
+    id: string;
     name: string;
     species: string; //Enum
     nickname?: string | null;

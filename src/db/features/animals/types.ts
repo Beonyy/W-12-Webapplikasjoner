@@ -1,5 +1,5 @@
 export type AnimalDb = {
-    id: number;
+    id: string;
     name: string;
     species: string;
     nickname: string | null;

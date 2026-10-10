@@ -1,4 +1,5 @@
 import type { Animal } from "../../../app/features/animals/types";
+import type { AnimalDb } from "./types";
 import { toAnimalDb, toAnimal } from "./mappers";
 import { animalTable } from "./schema";
 import { db } from "../../index";
@@ -11,7 +12,7 @@ export async function insertAnimal(animal: Animal): Promise<void> {
 
 }
 
-export async function getAnimal(id: number): Promise<Animal | null> {
+export async function getAnimal(id: string): Promise<Animal | null> {
     const result = await db
         .select()
         .from(animalTable)
