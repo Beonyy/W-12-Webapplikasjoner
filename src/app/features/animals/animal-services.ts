@@ -15,21 +15,33 @@ export interface AnimalService {
     remove(user: any, id: string): Promise<Result<Animal>>;
 }
 
+
+//TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
         async list(user: any){
+            //TODO: validation
+            //TODO: internal logic
             return await repository.list()
         },
         async get(user: any, id: string){
+            //TODO: validation
+            //TODO: internal logic
             return await repository.get(id);
         },
         async create(user: any, input: any){
+            //TODO: validation
+            //TODO: internal logic
             return await repository.create(input);
         },
         async update(user: any, id: string, input: any){
+            //TODO: validation
+            //TODO: internal logic
             return await repository.update(id, input);
         },
         async remove(user: any, id: string){
+            //TODO: validation
+            //TODO: internal logic
             return await repository.remove(id);
         },
     };

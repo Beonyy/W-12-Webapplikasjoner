@@ -65,6 +65,15 @@ export function createAnimalRepository(db: any): AnimalRepository{
             }
         },
         get: async (id: string) => {
+            if (id!= "0") {
+                return {
+                    success: false,
+                    error : {
+                        code: "NOT_FOUND",
+                        message: "TODO:"
+                    }
+                }
+            }
             const animal = mockAnimals[0];
 
             return {

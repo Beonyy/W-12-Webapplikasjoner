@@ -37,7 +37,7 @@ export function createAnimalController(service: AnimalService): AnimalController
 
             const {id} = params;
             // TODO: validate id
-            if (!id){
+            if (!id || typeof id !== "string"){
                 return Response.json(
                     {error: "Missing id parameter"},
                     {status: 400},
