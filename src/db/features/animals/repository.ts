@@ -1,6 +1,3 @@
-import type { Animal } from "../../../app/features/animals/types";
-import type { AnimalDb } from "./types";
-import { toAnimalDb, toAnimal } from "./mappers";
 import { animalTable } from "./schema";
 import { db } from "../../index";
 import { eq, and, or, ilike } from "drizzle-orm";
@@ -43,9 +40,14 @@ export async function searchAnimals(keyword?: string): Promise<typeof animalTabl
     // and possibly gives nonsensical results. 
     // Need to be able to split it up into sensical groupings
 
+    //The following implementation works for a single search term.
+    // it checks against the listed up columns, and for partial matches, 
+    // but does not split up a complex search.
+    //Could be wrapped in logic to split up the input and search for each part.
+
     const searchTerm = `%${keyword.trim()}%`
 
-    return result = await db   
+    const result = await db   
         .select()
         .from(animalTable)
         .where(and(
@@ -58,10 +60,9 @@ export async function searchAnimals(keyword?: string): Promise<typeof animalTabl
                 ilike(animalTable.nickname, searchTerm),
                 ilike(animalTable.housingUnit, searchTerm),
             )
-        ))
-        .returning();
+        ));
 
-        return result[];
+        return result;
 }
 
 export async function updateAnimal(
