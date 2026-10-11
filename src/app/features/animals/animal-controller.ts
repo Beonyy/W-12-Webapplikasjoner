@@ -9,24 +9,88 @@ import { Result } from "@/app/types/result";
 import { ErrorCode } from "@/app/types/errors";
 import { DefaultAppContext } from "rwsdk/worker";
 import { RequestInfo } from "rwsdk/worker";
-export interface AnimalController {
-    list(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
-    get(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
-    create(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
-    update(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
-    action(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
-    remove(request:RequestInfo<any, DefaultAppContext>): Promise<Response>;
+import { animalService, AnimalService } from "./animal-services";
+import { isAnimal } from "./animal-types";
+
+
+export function parseParams(request:Request){
+    return Object.fromEntries(new URL(request.url).searchParams);
 }
 
-export function createAnimalController(service: any): AnimalController{
+export interface AnimalController {
+    list(request : RequestInfo): Promise<Response>;
+    get(request : RequestInfo): Promise<Response>;
+    create(request : RequestInfo): Promise<Response>;
+    update(request : RequestInfo): Promise<Response>;
+    action(request : RequestInfo): Promise<Response>;
+    remove(request : RequestInfo): Promise<Response>;
+}
+
+export function createAnimalController(service: AnimalService): AnimalController{
     return {
-        async list(request:RequestInfo<any, DefaultAppContext>)    {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
-        async get(request:RequestInfo<any, DefaultAppContext>)     {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
-        async create(request:RequestInfo<any, DefaultAppContext>)  {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
-        async update(request:RequestInfo<any, DefaultAppContext>)  {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
-        async action(request:RequestInfo<any, DefaultAppContext>)  {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
-        async remove(request:RequestInfo<any, DefaultAppContext>)  {return Response.json({success: false, error: {code: "INTERNAL_SERVER_ERROR", message: "TODO:"}})},
+        async list({request}:RequestInfo){
+            
+            return Response.json(await service.list(null));
+        },
+        
+        async get({params}:RequestInfo){
+
+            const {id} = params;
+            // TODO: validate id
+            if (!id){
+                return Response.json(
+                    {error: "Missing id parameter"},
+                    {status: 400},
+                );
+            }
+            
+            return Response.json(await service.get(null, id));
+        },
+
+        
+        async create({request}:RequestInfo){
+            const rawData : unknown = await request.json();
+            if (!isAnimal(rawData)){
+                return Response.json(
+                    {error:' Invalid request body'},
+                    { status: 400},
+                )
+            }
+            return Response.json(await service.create(null, rawData))
+        },
+        
+        async update({request}:RequestInfo)  {
+            const params = parseParams(request);
+            const {id} = params;
+            const rawData : unknown = await request.json();
+            if (!isAnimal(rawData)){
+                return Response.json(
+                    {error:' Invalid request body'},
+                    { status: 400},
+                )
+            }
+            return Response.json(await service.update(null, id, rawData))
+        },
+        
+        async action({request})  {
+            return Response.json(
+                {error:' Invalid request body'},
+                { status: 400},)
+            },
+
+        async remove({request}:RequestInfo)  {
+            const params = parseParams(request);
+            const {id} = params;
+            // TODO: validate id
+            if (!id){
+                return Response.json(
+                    {error: "Missing id parameter"},
+                    {status: 400},
+                );
+            }
+            return Response.json(await service.remove(null, id));
+        },
     };
 }
 
-export const animalController = createAnimalController({})
+export const animalController = createAnimalController(animalService)

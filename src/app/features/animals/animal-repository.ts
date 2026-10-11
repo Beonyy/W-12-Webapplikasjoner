@@ -1,9 +1,11 @@
-import { Animal } from "./animal-types";
 
+import { Result , ResultData} from "@/app/types/result";
+import { ResultError } from "@/app/types/errors";
+import { Animal } from "./animal-types";
 
 const mockAnimals : Animal[] = [
     {
-        name : "1",
+        name : "Bingo",
         kind: "2",
         nickname: "3",
         dateOfBirth : "4",
@@ -11,24 +13,81 @@ const mockAnimals : Animal[] = [
         housingUnit : "6",
         contactInfo: "7",
         bilder: [],
-    }
+    },
+    {
+        name : "Bongo",
+        kind: "2",
+        nickname: "3",
+        dateOfBirth : "4",
+        traits: "5",
+        housingUnit : "6",
+        contactInfo: "7",
+        bilder: [],
+    },
+    {
+        name : "Bango",
+        kind: "2",
+        nickname: "3",
+        dateOfBirth : "4",
+        traits: "5",
+        housingUnit : "6",
+        contactInfo: "7",
+        bilder: [],
+    },
 ]
 
 export interface AnimalRepository {
-    create: (animal: any) => Promise<any>;
-    update: (id: string, animal: any) => Promise<any>;
-    get: (id: string) => Promise<any>;
-    list: () => Promise<any>;
-    remove: (id: string) => Promise<any>;
+    create: (animal: any) => Promise<Result<Animal>>;
+    update: (id: string, animal: any) => Promise<Result<Animal>>;
+    get: (id: string) => Promise<Result<Animal>>;
+    list: () => Promise<Result<Animal[]>>;
+    remove: (id: string) => Promise<Result<Animal>>;
 };
 
 export function createAnimalRepository(db: any): AnimalRepository{
     return{
-        create: async (animal: any) => {},
-        update: async (id: string, animal: any) => {},
-        get: async (id: string) => {},
-        list: async () => {},
-        remove: async (id: string) => {},
+        create: async (animal: any) => {
+            return {
+                success: false,
+                error : {
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "TODO:"
+                }
+            }
+        },
+        update: async (id: string, animal: any) => {
+            return {
+                success: false,
+                error : {
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "TODO:"
+                }
+            }
+        },
+        get: async (id: string) => {
+            const animal = mockAnimals[0];
+
+            return {
+                success: true,
+                data: animal,
+            }
+        },
+        list: async () => {
+
+            return {
+                success : true,
+                data : mockAnimals
+            }
+        },
+        remove: async (id: string) => {
+            return {
+                success: false,
+                error : {
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "TODO:"
+                }
+            }
+        },
     };
 }
 

@@ -20,7 +20,7 @@ export interface AnimalApi{
 export function createAnimalApi(): AnimalApi{
     return {
         async list(): Promise<Result<Animal[]>>{
-            const response = await fetch(`/api/pens`,{
+            const response = await fetch(`/api/animals`,{
                 method: 'GET',
             })
             if(!response.ok){
@@ -30,7 +30,7 @@ export function createAnimalApi(): AnimalApi{
         },
 
         async get(id:string): Promise<Result<Animal>>{
-            const response = await fetch(`/api/pens/${id}`,{
+            const response = await fetch(`/api/animals/${id}`,{
                 method: 'GET',
             })
             if(!response.ok){
@@ -40,7 +40,7 @@ export function createAnimalApi(): AnimalApi{
         },
 
         async create(animal:Animal): Promise<Result<void>>{
-            const response = await fetch('/api/pens',{
+            const response = await fetch('/api/animals',{
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body : JSON.stringify(animal)
@@ -52,7 +52,7 @@ export function createAnimalApi(): AnimalApi{
         },
 
         async update(id:string, animal:Animal): Promise<Result<void>>{
-             const response = await fetch(`/api/pens/${id}`,{
+             const response = await fetch(`/api/animals/${id}`,{
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body : JSON.stringify(animal)
@@ -68,7 +68,7 @@ export function createAnimalApi(): AnimalApi{
         },
         
         async remove(id:string): Promise<Result<void>>{
-             const response = await fetch(`/api/pens/${id}`,{
+             const response = await fetch(`/api/animals/${id}`,{
                 method: 'DELETE',
             })
             if(!response.ok){
