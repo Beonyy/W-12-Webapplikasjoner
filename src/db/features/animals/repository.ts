@@ -2,14 +2,17 @@ import { animalTable } from "./schema";
 import { db } from "../../index";
 import { eq, and, or, ilike } from "drizzle-orm";
 
-export async function insertAnimal(data: typeof animalTable.$inferInsert): Promise<void> 
+export async function insertAnimal(data: typeof animalTable.$inferInsert): Promise<typeof animalTable.$inferSelect>
 {
-    await db
+    const result = await db
         .insert(animalTable)
         .values(data)
+        .returning();
+    
+    return result[0];
 }
 
-export async function getAnimalById(id: string) 
+export async function getAnimalById(id: string): Promise<typeof animalTable.$inferSelect | null>
 {
     const result = await db
         .select()
