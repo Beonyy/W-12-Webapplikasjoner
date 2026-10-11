@@ -29,6 +29,7 @@
   "dependencies": {
     "@dnd-kit/helpers": "0.5.0",
     "@dnd-kit/react": "0.5.0",
+    "@paralleldrive/cuid2": "^3.3.0",
     "@tailwindcss/vite": "4.3.3",
     "better-auth": "1.7.3",
     "class-variance-authority": "0.7.1",

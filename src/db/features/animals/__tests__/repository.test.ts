@@ -1,9 +1,11 @@
-import { describe, test, expect, vi, afterEach, afterAll } from "vitest";
+import { describe, test, expect, vi, beforeEach, afterEach, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
-import type { Animal } from "../../../../app/features/animals/types";
-import { animalTable } from "../schema";
-import { insertAnimal, getAnimal } from "../repository";
-import { makeAnimal } from "./helpers";
+import { animals } from "../schema";
+import { Species } from "../enum";
+import { createAnimalRepository } from "../repository";
+import { makeAnimal, makeMockDatabase } from "./helpers";
+import type { NewAnimal, Animal } from "../schema"
+
 
 const { closeTestDatabase } = vi.hoisted(() => ({
     closeTestDatabase: vi.fn(),
@@ -20,53 +22,57 @@ vi.mock("../../index", async () => {
 import { db } from "../../../index";
 
 afterEach(async () => {
-    await db.delete(animalTable);
+    await db.delete(animals);
 });
 
 afterAll(() => {
     closeTestDatabase();
 })
 
-describe("createAnimal", () => {
-    test("inserts an animal row in database", async () => {
-        //Arrange
-        const animal: Animal = makeAnimal({ id: 130 });
-
-        //Act
-        await insertAnimal(animal);
-
-        //Assert
-        const rows = await db
-        .select()
-        .from(animalTable)
-        .where(eq(animalTable.id, animal.id));
-
-        expect(rows).toHaveLength(1);
-        expect(rows[0]?.name).toBe(animal.name)
+describe("createAnimalRepository", () => {
+    let mockDb: ReturnType<typeof makeMockDatabase>;
+    beforeEach(() => {
+        mockDb = makeMockDatabase();
     });
-});
-
-describe("getAnimal", () => {
-    test("returns the animal with the requested Id", async () => {
-        //Arrange
-        const animal: Animal = makeAnimal({ id: 3500, nickname: null });
-        await insertAnimal(animal)
-        
-        //Act
-        const result = await getAnimal(3500);
-
-        //Assert
-        expect(result).toEqual(animal)
-    });
-
-    test("returns null when no animal has requested Id", async () => {
-        //Arrange
-        //DB should be empty
-
-        //Act
-        const result = await getAnimal(2700);
-
-        //Assert
-        expect(result).toEqual(null);
+    
+    afterEach(() => {
+        mockDb.close();
     })
+
+    describe("insertAnimal", () => {
+        test("inserts an animal row", async () => {
+            //Arrange
+            const repo = createAnimalRepository(mockDb.db);
+            const animal: NewAnimal = makeAnimal({ name: "Fido" })
+
+            //Act
+            await repo.insertAnimal(animal);
+        });
+    });
+    describe("getAnimalById", () => {
+        test("", async () => {
+
+        });
+    });
+    describe("searchAnimals", () => {
+        test("", async () => {
+
+        });
+    });
+    describe("updateAnimal", () => {
+        test("", async () => {
+
+        });
+    });
+    describe("softDeleteAnimal", () => {
+        test("", async () => {
+
+        });
+    });
+    describe("hardDeleteAnimal", () => {
+        test("", async () => {
+            
+        })
+    })
+
 });

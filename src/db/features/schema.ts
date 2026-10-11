@@ -1,8 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
-export const animalTable = sqliteTable("animals", {
+export const animals = sqliteTable("animals", {
     id: text("animalId").primaryKey().$defaultFn(() => createId()),
     name: text("name").notNull(),
     species: text("species").notNull(),
@@ -26,20 +25,14 @@ export const animalAuditLogs = sqliteTable("animal_audit_log", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   animalId: text("animalId")
     .notNull()
-    .references(() => animalTable.id,{ onDelete: "cascade" }),
+    .references(() => animals.id,{ onDelete: "cascade" }),
   action: text("action").notNull(),
     changedAt: integer("changed_at", { mode: "timestamp" })
         .notNull()
         .$defaultFn(() => new Date()),
 });
 
-export const animalRelations = relations(animalTable, ({ many }) => ({
-    auditLogs: many(animalAuditLogs),
-}));
+export type Animal = typeof animals.$inferSelect;
+export type NewAnimal = typeof animals.$inferInsert;
 
-export const animalAuditLogRelations = relations(animalAuditLogs, ({ one }) => ({
-    animal: one(animalTable, {
-        fields: [animalAuditLogs.animalId],
-        references: [animalTable.id],
-    }),
-}));
+export type AnimalAuditLog = typeof animalAuditLogs.$inferSelect;

@@ -1,4 +1,4 @@
-import { animalTable } from "./schema";
+import { animals } from "./schema";
 import { eq, and, or, ilike } from "drizzle-orm";
 import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 import * as schema from "./schema"
@@ -8,25 +8,25 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
 {
     return {
 
-        async insertAnimal(data: typeof animalTable.$inferInsert): Promise<typeof animalTable.$inferSelect>
+        async insertAnimal(data: typeof animals.$inferInsert): Promise<typeof animals.$inferSelect>
         {
             const result = await db
-                .insert(animalTable)
+                .insert(animals)
                 .values(data)
                 .returning();
             
             return result[0];
         },
-        async getAnimalById(id: string): Promise<typeof animalTable.$inferSelect | null>
+        async getAnimalById(id: string): Promise<typeof animals.$inferSelect | null>
         {
             const result = await db
                 .select()
-                .from(animalTable)
-                .where(eq(animalTable.id, id));
+                .from(animals)
+                .where(eq(animals.id, id));
 
             return result[0] ?? null;
         },
-        async searchAnimals(keyword?: string): Promise<typeof animalTable.$inferSelect[]>
+        async searchAnimals(keyword?: string): Promise<typeof animals.$inferSelect[]>
         {
             if (!keyword || keyword.trim() === "") 
                 {
@@ -36,8 +36,8 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
                     //would return all
                     return await db
                         .select()
-                        .from(animalTable)
-                        .where(eq(animalTable.deleted, false));
+                        .from(animals)
+                        .where(eq(animals.deleted, false));
 
                 }
 
@@ -56,16 +56,16 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
 
             const result = await db   
                 .select()
-                .from(animalTable)
+                .from(animals)
                 .where(and(
-                    eq(animalTable.deleted, false),
+                    eq(animals.deleted, false),
                     or(
                         //https://orm.drizzle.team/docs/operators#ilike
-                        ilike(animalTable.name, searchTerm),
-                        ilike(animalTable.species, searchTerm),
-                        ilike(animalTable.characteristics, searchTerm),
-                        ilike(animalTable.nickname, searchTerm),
-                        ilike(animalTable.housingUnit, searchTerm),
+                        ilike(animals.name, searchTerm),
+                        ilike(animals.species, searchTerm),
+                        ilike(animals.characteristics, searchTerm),
+                        ilike(animals.nickname, searchTerm),
+                        ilike(animals.housingUnit, searchTerm),
                     )
                 ));
 
@@ -73,25 +73,25 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
         },
         async updateAnimal(
             id: string, 
-            data: Partial<typeof animalTable.$inferInsert>): 
-            Promise<typeof animalTable.$inferSelect | null> 
+            data: Partial<typeof animals.$inferInsert>): 
+            Promise<typeof animals.$inferSelect | null> 
         {
             const result = await db
-                .update(animalTable)
+                .update(animals)
                 .set(data)
                 .where(and(
-                    eq(animalTable.id, id), 
-                    eq(animalTable.deleted, false)))
+                    eq(animals.id, id), 
+                    eq(animals.deleted, false)))
                 .returning();
             
             return result[0] ?? null;
         },
-        async softDeleteAnimal(id: string): Promise<typeof animalTable.$inferSelect | null> 
+        async softDeleteAnimal(id: string): Promise<typeof animals.$inferSelect | null> 
         {
             const result = await db
-                .update(animalTable)
+                .update(animals)
                 .set({ deleted: true })
-                .where(eq(animalTable.id, id))
+                .where(eq(animals.id, id))
                 .returning();
 
             //returns the entire row so the deleted-column can be checked for correct value
@@ -100,8 +100,8 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
         async hardDeleteAnimal(id: string): Promise<void>
         {
             await db
-                .delete(animalTable)
-                .where(eq(animalTable.id, id));
+                .delete(animals)
+                .where(eq(animals.id, id));
         },
     }
 }

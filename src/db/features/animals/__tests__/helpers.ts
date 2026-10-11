@@ -1,7 +1,8 @@
 import Database from "better-sqlite3";
-import type { Animal } from "../../../../app/features/animals/types";
-import type { AnimalDb } from "../types";
+import type { Animal, NewAnimal } from "../schema";
+import { Species } from "../enum";
 import { drizzle } from "drizzle-orm/better-sqlite3";
+import { createId } from "@paralleldrive/cuid2";
 
 export function makeMockDatabase() {
     
@@ -10,7 +11,7 @@ export function makeMockDatabase() {
 
     sqlite.exec(`
         CREATE TABLE animals (
-        animalId INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         species TEXT NOT NULL,
         nickname TEXT,
@@ -28,13 +29,11 @@ export function makeMockDatabase() {
     };
 }
 
-
-export function makeAnimal(overrides: Partial<Animal> = {}): Animal {
+export function makeNewAnimal(overrides: Partial<Animal> = {}): NewAnimal {
        return {
-            id: 1,
             name: "Napolion",
-            species: "cat",
-            nickname: undefined,
+            species: Species.Cat,
+            nickname: null,
             dateOfBirth: null,
             characteristics: null,
             housingUnit: "H1404",
@@ -44,17 +43,19 @@ export function makeAnimal(overrides: Partial<Animal> = {}): Animal {
        }
 }
 
-export function makeAnimalDb(overrides: Partial<AnimalDb> = {}): AnimalDb {
+export function makeAnimal(): Animal {
     return {
-        id: 1,
+        id: createId(),
         name: "Napolion",
-        species: "cat",
+        species: Species.Cat,
         nickname: null,
         dateOfBirth: null,
         characteristics: null,
         housingUnit: "H1404",
         contactInfo: null,
         profileImageUrl: null,
-        ...overrides,
+        deleted: false,
+        createdAt: new Date("2026-11-10T00:00:00Z"),
+        updatedAt: null,
     }
 }
