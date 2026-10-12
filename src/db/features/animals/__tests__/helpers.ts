@@ -6,7 +6,7 @@ import { createId } from "@paralleldrive/cuid2";
 
 export function makeMockDatabase() {
     
-    // using RAM to ensure nothing becomes persistent
+    // making the database exist only in RAM
     const sqlite = new Database(":memory:");
 
     sqlite.exec(`
@@ -43,7 +43,7 @@ export function makeNewAnimal(overrides: Partial<Animal> = {}): NewAnimal {
        }
 }
 
-export function makeAnimal(): Animal {
+export function makeAnimal(overrides: Partial<Animal> = {}): Animal {
     return {
         id: createId(),
         name: "Napolion",
