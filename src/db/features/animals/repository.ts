@@ -17,14 +17,11 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
             
             return result[0];
         },
-        async getAnimalById(id: string): Promise<typeof animals.$inferSelect | null>
+        async getAnimalById(id: string): Promise<typeof animals.$inferSelect[]>
         {
-            const result = await db
-                .select()
-                .from(animals)
-                .where(eq(animals.id, id));
-
-            return result[0] ?? null;
+            const results = await db.query.animals.findMany({
+                where: { id }
+            });
         },
         async searchAnimals(keyword?: string): Promise<typeof animals.$inferSelect[]>
         {
@@ -34,11 +31,9 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
                     return [];
 
                     //would return all
-                    return await db
-                        .select()
-                        .from(animals)
-                        .where(eq(animals.deleted, false));
-
+                    return await db.query.animals.findMany({
+                        where: { deleted: false }
+                    });
                 }
 
             //This depends alot on what we get from the frontend.
