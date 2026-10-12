@@ -34,7 +34,6 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
         {
             if (!keyword || keyword.trim() === "") 
                 {
-                    //would return all
                     return await db.query.animals.findMany({
                         where: { deleted: false }
                     });
@@ -57,11 +56,8 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
         },
         async searchByKeywords(keyword?: string): Promise<typeof animals.$inferSelect[]>
         {
-            //after meeting: 
-            // split the input words by " "(space), search across all cols for EACH WORD
             if (!keyword || keyword.trim() === "") 
             {
-                //would return all
                 return await db.query.animals.findMany({
                     where: { deleted: false }
                 });
@@ -93,28 +89,21 @@ export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema
         async update(
             id: string, 
             data: Partial<typeof animals.$inferInsert>): 
-            Promise<typeof animals.$inferSelect | null> 
+            Promise<typeof animals.$inferSelect> 
         {
-            const result = await db
-                .update(animals)
+            return (await db.update(animals)
                 .set(data)
                 .where(and(
                     eq(animals.id, id), 
                     eq(animals.deleted, false)))
-                .returning();
-            
-            return result[0] ?? null;
+                .returning())[0];
         },
         async softDelete(id: string): Promise<typeof animals.$inferSelect | null> 
         {
-            const result = await db
-                .update(animals)
+            return (await db.update(animals)
                 .set({ deleted: true })
                 .where(eq(animals.id, id))
-                .returning();
-
-            //returns the entire row so the deleted-column can be checked for correct value
-            return result[0] ?? null;
+                .returning())[0] ?? null;
         },
         async hardDelete(id: string): Promise<void>
         {
