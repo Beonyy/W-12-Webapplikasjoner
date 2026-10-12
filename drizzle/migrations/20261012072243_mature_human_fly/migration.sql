@@ -7,7 +7,7 @@ CREATE TABLE `animal_audit_log` (
 );
 --> statement-breakpoint
 CREATE TABLE `animals` (
-	`animalId` text PRIMARY KEY,
+	`id` text PRIMARY KEY,
 	`name` text NOT NULL,
 	`species` text NOT NULL,
 	`nickname` text,
