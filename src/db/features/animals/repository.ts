@@ -1,10 +1,16 @@
 import { animals } from "./schema";
 import { eq, and } from "drizzle-orm";
-import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
-import * as schema from "./schema"
+//Struggling to find a type to use to enforce this: using "any" as a temporary 
+// solution to enable continuing development.
 
-//The db type: Only SQLite, any driver for it, using our specific schema
-export function createAnimalRepository(db: BaseSQLiteDatabase<any, typeof schema>)
+//Goal: 
+// The db type: Only SQLite, any driver for it, using our specific schema
+
+//Imports used for that approach, the first did not work:
+//import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
+//import * as schema from "./schema"
+
+export function createAnimalRepository(db: any)
 {
     return {
 
