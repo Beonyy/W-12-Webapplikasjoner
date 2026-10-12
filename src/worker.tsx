@@ -3,6 +3,9 @@ import { render, route } from "rwsdk/router";
 import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
 import { Home } from "@/app/pages/Home";
+import PetFormPage from "./app/features/animals/PetFormPage";
+
+import { animalsRoutes } from "./app/features/animals/animal-routes";
 
 /**
  * Alt som ligger på `ctx` for én forespørsel.
@@ -22,8 +25,11 @@ const app = defineApp([
     Response.json({ status: "ok", version: "0.1.0" })
   ),
 
+  ...animalsRoutes,
+
   // Sider. render(Document, [...]) pakker dem i et helt HTML-dokument.
   render(Document, [route("/", Home)]),
+  render(Document, [route("/register-pet", PetFormPage)]),
 ]);
 
 export default { fetch: app.fetch };
