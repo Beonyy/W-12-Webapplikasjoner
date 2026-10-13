@@ -1,23 +1,15 @@
 import { animals } from "./schema";
 import { eq, and } from "drizzle-orm";
-import { DB } from "../../index"
-//Struggling to find a type to use to enforce this: using "any" as a temporary 
-// solution to enable continuing development.
+import { DB } from "../../index";
+import { db } from "@/db";
 
-//Goal: 
-// The db type: Only SQLite, any driver for it, using our specific schema
-
-//Imports used for that approach, the first did not work:
-//import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
-//import * as schema from "./schema"
-
-export function createAnimalRepository(db: DB)
+export function createAnimalRepository(myDb: DB)
 {
     return {
 
         async insert(data: typeof animals.$inferInsert): Promise<typeof animals.$inferSelect>
         {
-            const result = await db
+            const result = await myDb
                 .insert(animals)
                 .values(data)
                 .returning();
@@ -26,14 +18,14 @@ export function createAnimalRepository(db: DB)
         },
         async getById(id: string): Promise<typeof animals.$inferSelect[]>
         {
-            return await db.query.animals.findMany({
+            return await myDb.query.animals.findMany({
                 where: { id }
             });
         },
         //get all EXCEPT the soft deleted entries
         async getAll(): Promise<typeof animals.$inferSelect[]>
         {
-            return await db.query.animals.findMany({
+            return await myDb.query.animals.findMany({
                 where: { deleted: false }
             });
         },
@@ -41,14 +33,14 @@ export function createAnimalRepository(db: DB)
         {
             if (!keyword || keyword.trim() === "") 
                 {
-                    return await db.query.animals.findMany({
+                    return await myDb.query.animals.findMany({
                         where: { deleted: false }
                     });
                 }
 
             const searchTerm = `%${keyword.trim()}%`
 
-            return await db.query.animals.findMany({  
+            return await myDb.query.animals.findMany({  
                 where: {
                     deleted: false,
                     OR: [
@@ -65,7 +57,7 @@ export function createAnimalRepository(db: DB)
         {
             if (!keyword || keyword.trim() === "") 
             {
-                return await db.query.animals.findMany({
+                return await myDb.query.animals.findMany({
                     where: { deleted: false }
                 });
             }
@@ -74,7 +66,7 @@ export function createAnimalRepository(db: DB)
             // if the input contains consecutive spaces
             const words = keyword.trim().split(/\s+/).filter(Boolean);
 
-            return await db.query.animals.findMany({
+            return await myDb.query.animals.findMany({
                 where: {
                     deleted: false,
                     AND: words.map(word => {
@@ -98,7 +90,7 @@ export function createAnimalRepository(db: DB)
             data: Partial<typeof animals.$inferInsert>): 
             Promise<typeof animals.$inferSelect> 
         {
-            return (await db.update(animals)
+            return (await myDb.update(animals)
                 .set(data)
                 .where(and(
                     eq(animals.id, id), 
@@ -107,16 +99,18 @@ export function createAnimalRepository(db: DB)
         },
         async softDelete(id: string): Promise<typeof animals.$inferSelect | null> 
         {
-            return (await db.update(animals)
+            return (await myDb.update(animals)
                 .set({ deleted: true })
                 .where(eq(animals.id, id))
                 .returning())[0] ?? null;
         },
         async hardDelete(id: string): Promise<void>
         {
-            await db
+            await myDb
                 .delete(animals)
                 .where(eq(animals.id, id));
         },
     }
 }
+
+export const animalRepository = createAnimalRepository(db);
