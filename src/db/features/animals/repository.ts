@@ -2,9 +2,8 @@ import { animals } from "./schema";
 import { eq, and } from "drizzle-orm";
 import { DB } from "../../index";
 import { db } from "@/db";
-import { Result, ResultData } from "../../../shared/types/result";
+import { Result } from "../../../shared/types/result";
 import { Errors } from "../../../shared/types/errors";
-import { intersection } from "zod";
 
 export function createAnimalRepository(myDb: DB)
 {
@@ -20,7 +19,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result[0]
-                }
+                };
             } catch(error) {
                 console.error(error);
                 return {
@@ -29,8 +28,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Failed to create new entry."
                     }
-                }
-            }
+                };
+            };
         },
         async getById(id: string): Promise<Result<typeof animals.$inferSelect[]>>
         {
@@ -41,7 +40,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result
-                }
+                };
             } catch(error) {
                 console.error(error);
                 return {
@@ -50,8 +49,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.NOT_FOUND,
                         message: "Could not find requested ID."
                     }
-                }
-            }
+                };
+            };
         },
         //get all EXCEPT the soft deleted entries
         async getAll(): Promise<Result<typeof animals.$inferSelect[]>>
@@ -64,7 +63,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result
-                }
+                };
             } catch(error) {
                 console.error(error);
                 return {
@@ -73,8 +72,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not return requested data"
                     }
-                }
-            }
+                };
+            };
         },
         async searchBySubstring(keyword?: string): Promise<Result<typeof animals.$inferSelect[]>>
         {
@@ -88,10 +87,10 @@ export function createAnimalRepository(myDb: DB)
                     return {
                         success: true,
                         data: result
-                    }
-                }
+                    };
+                };
 
-                const searchTerm = `%${keyword.trim()}%`
+                const searchTerm = `%${keyword.trim()}%`;
 
                 const result = await myDb.query.animals.findMany({  
                     where: {
@@ -109,7 +108,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result
-                }
+                };
             } catch(error) {
                 console.error(error)
                 return {
@@ -118,8 +117,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not complete search"
                     }
-                }
-            }
+                };
+            };
         },
         async searchByKeywords(keyword?: string): Promise<Result<typeof animals.$inferSelect[]>>
         {
@@ -133,8 +132,8 @@ export function createAnimalRepository(myDb: DB)
                     return {
                         success: true,
                         data: result
-                    }
-                }
+                    };
+                };
 
                 //Using regex rather than split(" ") to avoid empty string results
                 // if the input contains consecutive spaces
@@ -161,7 +160,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result
-                }
+                };
             } catch(error) {
                 console.error(error)
                 return {
@@ -170,8 +169,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not complete the search."
                     }
-                }
-            }
+                };
+            };
 
         },
         async update(
@@ -191,7 +190,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result[0]
-                }
+                };
             } catch(error) {
                 console.error(error)
                 return {
@@ -200,8 +199,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.NOT_FOUND,
                         message: "Could not update requested resource"
                     }
-                }
-            }
+                };
+            };
         },
         async softDelete(id: string): Promise<Result<typeof animals.$inferSelect | null>>
         {
@@ -214,7 +213,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: result ?? null
-                }
+                };
             } catch(error) {
                 console.error(error)
                 return {
@@ -223,8 +222,8 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not delete the resource."
                     }
-                }
-            }
+                };
+            };
         },
         async hardDelete(id: string): Promise<Result<void>>
         {
@@ -236,7 +235,7 @@ export function createAnimalRepository(myDb: DB)
                 return {
                     success: true,
                     data: undefined
-                }
+                };
             } catch(error) {
                 console.error(error)
                 return {
@@ -245,10 +244,10 @@ export function createAnimalRepository(myDb: DB)
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not delete the resource"
                     }
-                }
-            }
+                };
+            };
         },
-    }
-}
+    };
+};
 
 export const animalRepository = createAnimalRepository(db);
