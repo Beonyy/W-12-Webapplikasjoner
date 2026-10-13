@@ -41,7 +41,7 @@
       // mønsteret finner wrangler ingenting, og sier «No migrations to apply».
       "migrations_pattern": "drizzle/migrations/*/migration.sql"
     }
-  ]
+  ],
 
   // Workers AI. Har ingen lokal emulering, så kallet går alltid til
   // Cloudflare. Husk `npm run generate` etter at dere slår den på.
@@ -51,5 +51,10 @@
   // "triggers": { "crons": ["0 7 * * *"] },
 
   // Objektlagring for filer og bilder.
-  // "r2_buckets": [{ "binding": "R2", "bucket_name": "webapp-files" }]
+  "r2_buckets": [
+    { 
+      "binding": "R2", 
+      "bucket_name": "animal-image" 
+    }
+  ]
 }

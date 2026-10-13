@@ -1,5 +1,6 @@
 import { animals } from "./schema";
 import { eq, and } from "drizzle-orm";
+import { DB } from "../../index"
 //Struggling to find a type to use to enforce this: using "any" as a temporary 
 // solution to enable continuing development.
 
@@ -10,7 +11,7 @@ import { eq, and } from "drizzle-orm";
 //import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 //import * as schema from "./schema"
 
-export function createAnimalRepository(db: any)
+export function createAnimalRepository(db: DB)
 {
     return {
 
