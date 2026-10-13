@@ -1,6 +1,6 @@
 
-import { Result , ResultData} from "@/app/types/result";
-import { ResultError } from "@/app/types/errors";
+import { Result , ResultData} from "@/shared/types/result";
+import { ResultError } from "@/shared/types/errors";
 import { Animal } from "./animal-types";
 
 const mockAnimals : Animal[] = [

@@ -6,7 +6,7 @@
 // Håndterer feil som kan oppstå med fetch og har en konsistent måte å gjøre dette på
 
 import { Animal } from "./animal-types";
-import { Result } from "@/app/types/result";
+import { Result } from "@/shared/types/result";
 
 export interface AnimalApi{
     list(): Promise<Result<Animal[]>>;

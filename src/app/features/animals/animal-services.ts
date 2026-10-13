@@ -3,7 +3,7 @@
 // Her sjekker vi om du får lov til det du prøver å gjøre
 // Her mapper vi muligens data for å ha en konsistent struktur
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
-import { Result } from "@/app/types/result";
+import { Result } from "@/shared/types/result";
 import { AnimalRepository, animalRepository } from "./animal-repository";
 import { Animal } from "./animal-types";
 

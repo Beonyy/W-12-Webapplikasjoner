@@ -5,8 +5,8 @@
 // Her sender vi en Response tilbake med et gitt format {ok: true, data: }
 // eller {ok: false: error: {}}
 
-import { Result } from "@/app/types/result";
-import { ErrorCode } from "@/app/types/errors";
+import { Result } from "@/shared/types/result";
+import { ErrorCode } from "@/shared/types/errors";
 import { DefaultAppContext } from "rwsdk/worker";
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
