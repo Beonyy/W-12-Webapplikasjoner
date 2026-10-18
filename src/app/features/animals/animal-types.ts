@@ -1,10 +1,10 @@
 
 export type Animal = {
     name : string;
-    kind: string;
+    species: string;
     nickname: string;
     dateOfBirth : string;
-    traits: string;
+    characteristics: string;
     housingUnit : string;
     contactInfo: string;
     bilder: AnimalImage[];
@@ -23,10 +23,10 @@ export function isAnimal(value: unknown): value is Animal{
     
     return(
         typeof animal.name == "string" &&
-        typeof animal.kind == "string" &&
+        typeof animal.species == "string" &&
         typeof animal.nickname == "string" &&
         typeof animal.dateOfBirth == "string" &&
-        typeof animal.traits == "string" &&
+        typeof animal.characteristics == "string" &&
         typeof animal.housingUnit == "string" &&
         typeof animal.contactInfo == "string"
     );
