@@ -21,6 +21,9 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@shared/*": ["./src/shared/*"],
       "@generated/*": ["./generated/*"]
     },
     /* Enable importing .json files */

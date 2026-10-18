@@ -1,9 +1,8 @@
 import { animals } from "./schema";
 import { eq, and } from "drizzle-orm";
-import { DB } from "../../index";
-import { db } from "@/db";
-import { Result } from "../../../shared/types/result";
-import { Errors } from "../../../shared/types/errors";
+import { db, DB } from "@/db";
+import { Result } from "@shared/types/result";
+import { Errors } from "@shared/types/errors";
 
 export function createAnimalRepository(myDb: DB)
 {
