@@ -80,4 +80,4 @@ export function createAnimalApi(): AnimalApi{
     };
 }
 
-const animalApi = createAnimalApi();
+export const animalApi = createAnimalApi();
