@@ -14,7 +14,7 @@ import { relations } from "./relations";
  * kulissene. Det som IKKE er trygt, er å legge noe som gjelder én bruker, som
  * en sesjon, i en modulvariabel. Da deles den mellom alle.
  */
-export const db = drizzle(env.DB, { relations });
+export const clientDatabase = drizzle(env.DB, { relations });
 
 export { schema, relations };
 
@@ -23,4 +23,4 @@ export { schema, relations };
  * better-sqlite3 i testene er `SQLiteAsyncDatabase`, så den samme koden kjører
  * mot begge. Det er dette som gjør det mulig å teste spørringer raskt.
  */
-export type DB = SQLiteAsyncDatabase<any, any, typeof relations>;
+export type Database = SQLiteAsyncDatabase<any, any, typeof relations>;

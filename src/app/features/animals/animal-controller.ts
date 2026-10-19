@@ -10,7 +10,7 @@ import { ErrorCode } from "@/shared/types/errors";
 import { DefaultAppContext } from "rwsdk/worker";
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
-import { isAnimal } from "./animal-types";
+import { isAnimal, isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
 
 
 export function parseParams(request:Request){
@@ -36,6 +36,7 @@ export function createAnimalController(service: AnimalService): AnimalController
         async get({params}:RequestInfo){
 
             const {id} = params;
+
             // TODO: validate id
             if (!id || typeof id !== "string"){
                 return Response.json(
@@ -49,8 +50,17 @@ export function createAnimalController(service: AnimalService): AnimalController
 
         
         async create({request}:RequestInfo){
-            const rawData : unknown = await request.json();
-            if (!isAnimal(rawData)){
+            let rawData : unknown 
+            try{
+                rawData = await request.json();
+            } catch{
+                return Response.json(
+                    { error:' Invalid JSON body'},
+                    { status: 400},
+                )
+            }
+
+            if (!isAnimalCreationParams(rawData)){
                 return Response.json(
                     {error:' Invalid request body'},
                     { status: 400},
@@ -62,8 +72,16 @@ export function createAnimalController(service: AnimalService): AnimalController
         async update({request}:RequestInfo)  {
             const params = parseParams(request);
             const {id} = params;
-            const rawData : unknown = await request.json();
-            if (!isAnimal(rawData)){
+            let rawData : unknown 
+            try{
+                rawData = await request.json();
+            } catch{
+                return Response.json(
+                    { error:' Invalid JSON body'},
+                    { status: 400},
+                )
+            }
+            if (!isAnimalUpdateParams(rawData)){
                 return Response.json(
                     {error:' Invalid request body'},
                     { status: 400},

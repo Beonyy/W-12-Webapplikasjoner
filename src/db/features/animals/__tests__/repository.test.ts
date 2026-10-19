@@ -19,10 +19,10 @@ vi.mock("../../index", async () => {
     return { db: testDatabase.db };
 });
 
-import { db } from "../../../index";
+import { clientDatabase } from "../../../index";
 
 afterEach(async () => {
-    await db.delete(animals);
+    await clientDatabase.delete(animals);
 });
 
 afterAll(() => {

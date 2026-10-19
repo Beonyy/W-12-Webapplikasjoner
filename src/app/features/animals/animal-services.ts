@@ -5,12 +5,12 @@
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
 import { AnimalRepository, animalRepository } from "./animal-repository";
-import { Animal } from "./animal-types";
+import { Animal, AnimalCreateParams } from "./animal-types";
 
 export interface AnimalService {
     list(user: any): Promise<Result<Animal[]>>;
     get(user: any, id: string): Promise<Result<Animal>>;
-    create(user: any, input: any): Promise<Result<Animal>>;
+    create(user: any, input: AnimalCreateParams): Promise<Result<Animal>>;
     update(user: any, id: string, input: any): Promise<Result<Animal>>;
     remove(user: any, id: string): Promise<Result<Animal>>;
 }
@@ -29,7 +29,7 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
             //TODO: internal logic
             return await repository.get(id);
         },
-        async create(user: any, input: any){
+        async create(user: any, input: AnimalCreateParams){
             //TODO: validation
             //TODO: internal logic
             return await repository.create(input);

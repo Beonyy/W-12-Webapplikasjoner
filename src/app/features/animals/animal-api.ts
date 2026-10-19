@@ -5,13 +5,13 @@
 
 // Håndterer feil som kan oppstå med fetch og har en konsistent måte å gjøre dette på
 
-import { Animal } from "./animal-types";
+import { Animal, AnimalCreateParams } from "./animal-types";
 import { Result } from "@/shared/types/result";
 
 export interface AnimalApi{
     list(): Promise<Result<Animal[]>>;
     get(id:string): Promise<Result<Animal>>;
-    create(animal:Animal): Promise<Result<void>>;
+    create(animalCreateParams: AnimalCreateParams): Promise<Result<void>>;
     update(id:string, animal:Animal): Promise<Result<void>>;
     action(): Promise<Result<void>>;
     remove(id:string): Promise<Result<void>>;
@@ -39,11 +39,11 @@ export function createAnimalApi(): AnimalApi{
             return { success:true, data: await response.json() }
         },
 
-        async create(animal:Animal): Promise<Result<void>>{
+        async create(animalCreateParams: AnimalCreateParams ): Promise<Result<void>>{
             const response = await fetch('/api/animals',{
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body : JSON.stringify(animal)
+                body : JSON.stringify(animalCreateParams)
             })
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
