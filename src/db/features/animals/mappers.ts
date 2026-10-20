@@ -1,23 +1,25 @@
-import type { Animal } from "../../../app/features/animals/types"
+import type { Animal } from "@app/features/animals/animal-types"
 import type { AnimalDb } from "./types"
 
-export function toAnimal(animalDb: AnimalDb): Animal {
+export function toAnimal(animalDb: AnimalDb, images: string[]): Animal {
     return {
-        id: animalDb.id,
+        // id: animalDb.id,
         name: animalDb.name,
         species: animalDb.species,
-        nickname: animalDb.nickname,
-        dateOfBirth: animalDb.dateOfBirth ? new Date (animalDb.dateOfBirth) : null,
-        characteristics: animalDb.characteristics ? animalDb.characteristics.split(",") : null,
+        nickname: animalDb.nickname ?? "",
+        dateOfBirth: new Date(animalDb.dateOfBirth ?? "1900-01-01"),
+        // dateOfBirth: animalDb.dateOfBirth ? new Date (animalDb.dateOfBirth) : "",
+        characteristics: animalDb.characteristics?.split(",") ?? [],
         housingUnit: animalDb.housingUnit,
-        contactInfo: animalDb.contactInfo,
-        profileImageUrl: animalDb.profileImageUrl
+        contactInfo: animalDb.contactInfo ?? "",
+        profileImageUrl: animalDb.profileImageUrl ?? "",
+        images: images
     }
 }
 
 export function toAnimalDb(animal: Animal): AnimalDb {
     return {
-        id: animal.id,
+        // id: animal.id,
         name: animal.name,
         species: animal.species,
         nickname: animal.nickname ?? null,

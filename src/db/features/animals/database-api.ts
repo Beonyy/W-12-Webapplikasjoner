@@ -1,26 +1,33 @@
-import { animals } from "./schema";
+import { animals } from "@/db/features/animals/schema";
 import { eq, and } from "drizzle-orm";
-import { DB } from "../../index";
-import { db } from "@/db";
-import { Result } from "../../../shared/types/result";
-import { Errors } from "../../../shared/types/errors";
+import { Database, drizzleDatabaseClient } from "@/db";
+import { Result } from "@shared/types/result";
+import { Errors } from "@shared/types/errors";
+import { AnimalDb } from "./types";
 
-export function createAnimalRepository(myDb: DB)
-{
+export interface AnimalDatabase {
+    create(data: AnimalDb):Promise<Result<AnimalDb>>;
+    getById(id: string):Promise<Result<AnimalDb>>;
+    updateById(id: string, data: Partial<AnimalDb>):Promise<Result<AnimalDb>>;
+    getAll():Promise<Result<AnimalDb[]>>;
+    softDelete(id: string): Promise<Result<AnimalDb | null>>;
+    hardDelete(id: string): Promise<Result<null>> ;
+}
+
+export function createAnimalDatabase(database: Database) {
     return {
-        async insert(data: typeof animals.$inferInsert): Promise<Result<typeof animals.$inferSelect>>
-        {
+        async create(data: AnimalDb): Promise<Result<AnimalDb>> {
             try {
-                const result = await myDb
+                const result = await database
                     .insert(animals)
                     .values(data)
                     .returning();
-                
+
                 return {
                     success: true,
                     data: result[0]
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error);
                 return {
                     success: false,
@@ -31,17 +38,27 @@ export function createAnimalRepository(myDb: DB)
                 };
             };
         },
-        async getById(id: string): Promise<Result<typeof animals.$inferSelect[]>>
-        {
+        async getById(id: string): Promise<Result<AnimalDb>> {
+
             try {
-                const result = await myDb.query.animals.findMany({
-                where: { id }
+                const result = await database.query.animals.findFirst({
+                    where: { id }
                 });
+
+                if (result === undefined){
+                    return {
+                    success: false,
+                    error: {
+                        code: Errors.NOT_FOUND,
+                        message: "Could not find requested ID."
+                    }
+                };
+                }
                 return {
                     success: true,
                     data: result
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error);
                 return {
                     success: false,
@@ -53,18 +70,17 @@ export function createAnimalRepository(myDb: DB)
             };
         },
         //get all EXCEPT the soft deleted entries
-        async getAll(): Promise<Result<typeof animals.$inferSelect[]>>
-        {
+        async getAll(): Promise<Result<AnimalDb[]>> {
             try {
-                const result = await myDb.query.animals.findMany({
+                const result = await database.query.animals.findMany({
                     where: { deleted: false }
                 });
-            
+
                 return {
                     success: true,
                     data: result
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error);
                 return {
                     success: false,
@@ -75,12 +91,10 @@ export function createAnimalRepository(myDb: DB)
                 };
             };
         },
-        async searchBySubstring(keyword?: string): Promise<Result<typeof animals.$inferSelect[]>>
-        {
+        async searchBySubstring(keyword?: string): Promise<Result<AnimalDb[]>> {
             try {
-                if (!keyword || keyword.trim() === "") 
-                {
-                    const result = await myDb.query.animals.findMany({
+                if (!keyword || keyword.trim() === "") {
+                    const result = await database.query.animals.findMany({
                         where: { deleted: false }
                     });
 
@@ -92,7 +106,7 @@ export function createAnimalRepository(myDb: DB)
 
                 const searchTerm = `%${keyword.trim()}%`;
 
-                const result = await myDb.query.animals.findMany({  
+                const result = await database.query.animals.findMany({
                     where: {
                         deleted: false,
                         OR: [
@@ -109,7 +123,7 @@ export function createAnimalRepository(myDb: DB)
                     success: true,
                     data: result
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
                 return {
                     success: false,
@@ -120,12 +134,10 @@ export function createAnimalRepository(myDb: DB)
                 };
             };
         },
-        async searchByKeywords(keyword?: string): Promise<Result<typeof animals.$inferSelect[]>>
-        {
+        async searchByKeywords(keyword?: string): Promise<Result<AnimalDb[]>> {
             try {
-                if (!keyword || keyword.trim() === "") 
-                {
-                    const result = await myDb.query.animals.findMany({
+                if (!keyword || keyword.trim() === "") {
+                    const result = await database.query.animals.findMany({
                         where: { deleted: false }
                     });
 
@@ -139,7 +151,7 @@ export function createAnimalRepository(myDb: DB)
                 // if the input contains consecutive spaces
                 const words = keyword.trim().split(/\s+/).filter(Boolean);
 
-                const result =  await myDb.query.animals.findMany({
+                const result = await database.query.animals.findMany({
                     where: {
                         deleted: false,
                         AND: words.map(word => {
@@ -161,7 +173,7 @@ export function createAnimalRepository(myDb: DB)
                     success: true,
                     data: result
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
                 return {
                     success: false,
@@ -173,13 +185,12 @@ export function createAnimalRepository(myDb: DB)
             };
 
         },
-        async update(
-            id: string, 
-            data: Partial<typeof animals.$inferInsert>): 
-            Promise<Result<typeof animals.$inferSelect>>
-        {
+        async updateById(
+            id: string,
+            data: Partial<AnimalDb>
+        ):Promise<Result<AnimalDb>> {
             try {
-                const result = await myDb
+                const result = await database
                     .update(animals)
                     .set(data)
                     .where(and(
@@ -191,7 +202,7 @@ export function createAnimalRepository(myDb: DB)
                     success: true,
                     data: result[0]
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
                 return {
                     success: false,
@@ -202,19 +213,18 @@ export function createAnimalRepository(myDb: DB)
                 };
             };
         },
-        async softDelete(id: string): Promise<Result<typeof animals.$inferSelect | null>>
-        {
+        async softDelete(id: string): Promise<Result<AnimalDb | null>> {
             try {
-                const result = (await myDb.update(animals)
+                const result = (await database.update(animals)
                     .set({ deleted: true })
                     .where(eq(animals.id, id))
                     .returning())[0]
- 
+
                 return {
                     success: true,
-                    data: result ?? null
+                    data: result
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
                 return {
                     success: false,
@@ -225,18 +235,17 @@ export function createAnimalRepository(myDb: DB)
                 };
             };
         },
-        async hardDelete(id: string): Promise<Result<void>>
-        {
+        async hardDelete(id: string): Promise<Result<null>> {
             try {
-                await myDb
+                await database
                     .delete(animals)
                     .where(eq(animals.id, id));
-                
+
                 return {
                     success: true,
-                    data: undefined
+                    data: null
                 };
-            } catch(error) {
+            } catch (error) {
                 console.error(error)
                 return {
                     success: false,
@@ -246,8 +255,8 @@ export function createAnimalRepository(myDb: DB)
                     }
                 };
             };
-        },
-    };
-};
+        }
+    }
+}
 
-export const animalRepository = createAnimalRepository(db);
+export const animalDatabase = createAnimalDatabase(drizzleDatabaseClient);
