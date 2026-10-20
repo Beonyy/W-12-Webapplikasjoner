@@ -14,7 +14,7 @@ import { relations } from "./relations";
  * kulissene. Det som IKKE er trygt, er å legge noe som gjelder én bruker, som
  * en sesjon, i en modulvariabel. Da deles den mellom alle.
  */
-export const clientDatabase = drizzle(env.DB, { relations });
+export const drizzleDatabaseClient = drizzle(env.DB, { relations });
 
 export { schema, relations };
 

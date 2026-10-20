@@ -1,108 +1,80 @@
 
-import { Result , ResultData} from "@/shared/types/result";
-import { ResultError } from "@/shared/types/errors";
+import { Result} from "@/shared/types/result";
 import { Animal, AnimalCreateParams, AnimalUpdateParams } from "./animal-types";
-import { clientDatabase, Database } from "@/db";
-import { create, updateById } from "@/db/features/animals/database-api";
+import { animalDatabase,AnimalDatabase } from "@/db/features/animals/database-api";
+import { toAnimal } from "@/db/features/animals/mappers";
+// import { create, getById, updateById } from "@/db/features/animals/database-api";
 
-// const mockAnimals : Animal[] = [
-//     {
-//         name : "Bingo",
-//         kind: "2",
-//         nickname: "3",
-//         dateOfBirth : "4",
-//         traits: "5",
-//         housingUnit : "6",
-//         contactInfo: "7",
-//         bilder: [],
-//     },
-//     {
-//         name : "Bongo",
-//         kind: "2",
-//         nickname: "3",
-//         dateOfBirth : "4",
-//         traits: "5",
-//         housingUnit : "6",
-//         contactInfo: "7",
-//         bilder: [],
-//     },
-//     {
-//         name : "Bango",
-//         kind: "2",
-//         nickname: "3",
-//         dateOfBirth : "4",
-//         traits: "5",
-//         housingUnit : "6",
-//         contactInfo: "7",
-//         bilder: [],
-//     },
-// ]
 
 export interface AnimalRepository {
     create: (animalCreateParams: AnimalCreateParams) => Promise<Result<Animal>>;
     update: (id: string, animalUpdateParams: AnimalUpdateParams) => Promise<Result<Animal>>;
     get: (id: string) => Promise<Result<Animal>>;
     list: () => Promise<Result<Animal[]>>;
-    remove: (id: string) => Promise<Result<Animal>>;
+    remove: (id: string) => Promise<Result<null>>;
 };
 
-export function createAnimalRepository(database: Database): AnimalRepository{
+export function createAnimalRepository(database: AnimalDatabase): AnimalRepository{
     return{
         create: async (animalCreateParams: AnimalCreateParams) => {
-
-            create(database, animalCreateParams)
-            return {
-                success: false,
-                error : {
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: "TODO:"
-                }
-            }
-        },
-        update: async (id: string, animalUpdateParams: AnimalUpdateParams) => {
-            updateById(id, animalUpdateParams)
-            return {
-                success: false,
-                error : {
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: "TODO:"
-                }
-            }
-        },
-        get: async (id: string) => {
-            if (id!= "0") {
+            
+            const res = await database.create(animalCreateParams)
+            if(res.success){
                 return {
-                    success: false,
-                    error : {
-                        code: "NOT_FOUND",
-                        message: "TODO:"
-                    }
+                    success: true,
+                    data: toAnimal(res.data, [])
                 }
             }
-            const animal = mockAnimals[0];
-
-            return {
-                success: true,
-                data: animal,
-            }
+            return res;
         },
+
+        update: async (id: string, animalUpdateParams: AnimalUpdateParams) => {
+            const res = await database.updateById(id, animalUpdateParams)
+            if(res.success){
+                  return {
+                    success: true,
+                    data: toAnimal(res.data, [])
+                }
+            }
+            return res;
+        },
+
+        get: async (id: string) => {
+            const res = await database.getById(id);
+             if(res.success){
+                  return {
+                    success: true,
+                    data: toAnimal(res.data, [])
+                }
+            }
+            return res;
+        },
+
         list: async () => {
-
-            return {
-                success : true,
-                data : mockAnimals
-            }
-        },
-        remove: async (id: string) => {
-            return {
-                success: false,
-                error : {
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: "TODO:"
+            const res = await database.getAll();
+             if(res.success){
+                  return {
+                    success: true,
+                    data: res.data.map(
+                        (item) => toAnimal(item, [])
+                    )
                 }
             }
+            return res;
+
+        },
+
+        remove: async (id: string) => {
+            const res = await database.softDelete(id);
+            if(res.success){
+                  return {
+                    success: true,
+                    data:null
+                }
+            }
+            return res;
         },
     };
 }
 
-export const animalRepository = createAnimalRepository(clientDatabase)
+export const animalRepository = createAnimalRepository(animalDatabase)

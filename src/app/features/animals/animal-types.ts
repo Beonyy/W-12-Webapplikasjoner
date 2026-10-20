@@ -5,7 +5,7 @@ export type Animal = {
     species: string;
     nickname: string;
     dateOfBirth : Date;
-    characteristics: string;
+    characteristics: string[];
     housingUnit : string;
     contactInfo: string;
     profileImageUrl: string,

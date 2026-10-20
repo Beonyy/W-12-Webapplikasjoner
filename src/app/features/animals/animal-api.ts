@@ -17,6 +17,11 @@ export interface AnimalApi{
     remove(id:string): Promise<Result<void>>;
 }
 
+
+// TODO: Try/catch for hver metode.
+// TODO: isAnimal på responsene for ekstra integritetssjekker.
+// TODO: userId som et parameter? Eller hentes i metoden?
+
 export function createAnimalApi(): AnimalApi{
     return {
         async list(): Promise<Result<Animal[]>>{

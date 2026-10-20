@@ -29,14 +29,19 @@ export interface AnimalController {
 export function createAnimalController(service: AnimalService): AnimalController{
     return {
         async list({request}:RequestInfo){
-            
-            return Response.json(await service.list(null));
+
+            //TODO:for later.
+            //request.headers.get("Authorization")
+
+            const userId = ""
+            return Response.json(await service.list(userId));
         },
         
-        async get({params}:RequestInfo){
-
+        async get({request}:RequestInfo){
+            const params = parseParams(request)
             const {id} = params;
-
+            const userId = ""
+            
             // TODO: validate id
             if (!id || typeof id !== "string"){
                 return Response.json(
@@ -45,14 +50,15 @@ export function createAnimalController(service: AnimalService): AnimalController
                 );
             }
             
-            return Response.json(await service.get(null, id));
+            return Response.json(await service.get(userId, id));
         },
 
         
         async create({request}:RequestInfo){
-            let rawData : unknown 
+            const userId = ""
+            let data : unknown 
             try{
-                rawData = await request.json();
+                data = await request.json();
             } catch{
                 return Response.json(
                     { error:' Invalid JSON body'},
@@ -60,43 +66,46 @@ export function createAnimalController(service: AnimalService): AnimalController
                 )
             }
 
-            if (!isAnimalCreationParams(rawData)){
+            if (!isAnimalCreationParams(data)){
                 return Response.json(
                     {error:' Invalid request body'},
                     { status: 400},
                 )
             }
-            return Response.json(await service.create(null, rawData))
+            return Response.json(await service.create(userId, data))
         },
         
         async update({request}:RequestInfo)  {
+            const userId = "";
             const params = parseParams(request);
             const {id} = params;
-            let rawData : unknown 
+            let data : unknown 
             try{
-                rawData = await request.json();
+                data = await request.json();
             } catch{
                 return Response.json(
                     { error:' Invalid JSON body'},
                     { status: 400},
                 )
             }
-            if (!isAnimalUpdateParams(rawData)){
+            if (!isAnimalUpdateParams(data)){
                 return Response.json(
                     {error:' Invalid request body'},
                     { status: 400},
                 )
             }
-            return Response.json(await service.update(null, id, rawData))
+            return Response.json(await service.update(userId, id, data))
         },
         
         async action({request})  {
+            const userId = "";
             return Response.json(
                 {error:' Invalid request body'},
                 { status: 400},)
             },
 
         async remove({request}:RequestInfo)  {
+            const userId = "";
             const params = parseParams(request);
             const {id} = params;
             // TODO: validate id
@@ -106,7 +115,7 @@ export function createAnimalController(service: AnimalService): AnimalController
                     {status: 400},
                 );
             }
-            return Response.json(await service.remove(null, id));
+            return Response.json(await service.remove(userId, id));
         },
     };
 }
