@@ -9,12 +9,12 @@ import { Animal, AnimalCreateParams } from "./animal-types";
 import { Result } from "@/shared/types/result";
 
 export interface AnimalApi{
-    list(): Promise<Result<Animal[]>>;
-    get(id:string): Promise<Result<Animal>>;
-    create(animalCreateParams: AnimalCreateParams): Promise<Result<void>>;
-    update(id:string, animal:Animal): Promise<Result<void>>;
-    action(): Promise<Result<void>>;
-    remove(id:string): Promise<Result<void>>;
+    list(sessionToken:string): Promise<Result<Animal[]>>;
+    get(sessionToken:string, id:string): Promise<Result<Animal>>;
+    create(sessionToken:string, animalCreateParams: AnimalCreateParams): Promise<Result<void>>;
+    update(sessionToken:string, id:string, animal:Animal): Promise<Result<void>>;
+    action(sessionToken:string): Promise<Result<void>>;
+    remove(sessionToken:string, id:string): Promise<Result<void>>;
 }
 
 
@@ -24,9 +24,13 @@ export interface AnimalApi{
 
 export function createAnimalApi(): AnimalApi{
     return {
-        async list(): Promise<Result<Animal[]>>{
+        async list(sessionToken:string): Promise<Result<Animal[]>>{
             const response = await fetch(`/api/animals`,{
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${sessionToken}`
+                }
             })
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
@@ -34,9 +38,13 @@ export function createAnimalApi(): AnimalApi{
             return { success:true, data: await response.json() }
         },
 
-        async get(id:string): Promise<Result<Animal>>{
+        async get(sessionToken:string, id:string): Promise<Result<Animal>>{
             const response = await fetch(`/api/animals/${id}`,{
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${sessionToken}`
+                }
             })
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
@@ -44,10 +52,13 @@ export function createAnimalApi(): AnimalApi{
             return { success:true, data: await response.json() }
         },
 
-        async create(animalCreateParams: AnimalCreateParams ): Promise<Result<void>>{
+        async create(sessionToken:string, animalCreateParams: AnimalCreateParams ): Promise<Result<void>>{
             const response = await fetch('/api/animals',{
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${sessionToken}`
+                },
                 body : JSON.stringify(animalCreateParams)
             })
             if(!response.ok){
@@ -56,10 +67,13 @@ export function createAnimalApi(): AnimalApi{
             return { success:true, data: await response.json() }
         },
 
-        async update(id:string, animal:Animal): Promise<Result<void>>{
+        async update(sessionToken:string, id:string, animal:Animal): Promise<Result<void>>{
              const response = await fetch(`/api/animals/${id}`,{
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${sessionToken}`
+                },
                 body : JSON.stringify(animal)
             })
             if(!response.ok){
@@ -68,13 +82,17 @@ export function createAnimalApi(): AnimalApi{
             return { success:true, data: await response.json() }
         },
 
-        async action(): Promise<Result<void>>{
+        async action(sessionToken:string): Promise<Result<void>>{
             return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
         },
         
-        async remove(id:string): Promise<Result<void>>{
+        async remove(sessionToken:string, id:string): Promise<Result<void>>{
              const response = await fetch(`/api/animals/${id}`,{
                 method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${sessionToken}`
+                }
             })
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};

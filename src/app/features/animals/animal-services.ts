@@ -8,38 +8,38 @@ import { AnimalRepository, animalRepository } from "./animal-repository";
 import { Animal, AnimalCreateParams } from "./animal-types";
 
 export interface AnimalService {
-    list(userId: string): Promise<Result<Animal[]>>;
-    get(userId: string, id: string): Promise<Result<Animal>>;
-    create(userId: string, input: AnimalCreateParams): Promise<Result<Animal>>;
-    update(userId: string, id: string, input: any): Promise<Result<Animal>>;
-    remove(userId: string, id: string): Promise<Result<null>>;
+    list(sessionToken: string): Promise<Result<Animal[]>>;
+    get(sessionToken: string, id: string): Promise<Result<Animal>>;
+    create(sessionToken: string, input: AnimalCreateParams): Promise<Result<Animal>>;
+    update(sessionToken: string, id: string, input: any): Promise<Result<Animal>>;
+    remove(sessionToken: string, id: string): Promise<Result<null>>;
 }
 
 
 //TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
-        async list(userId: string){
+        async list(sessionToken: string){
             //TODO: validation
             //TODO: internal logic
             return await repository.list()
         },
-        async get(userId: string, id: string){
+        async get(sessionToken: string, id: string){
             //TODO: validation
             //TODO: internal logic
             return await repository.get(id);
         },
-        async create(userId: string, input: AnimalCreateParams){
+        async create(sessionToken: string, input: AnimalCreateParams){
             //TODO: validation
             //TODO: internal logic
             return await repository.create(input);
         },
-        async update(userId: string, id: string, input: any){
+        async update(sessionToken: string, id: string, input: any){
             //TODO: validation
             //TODO: internal logic
             return await repository.update(id, input);
         },
-        async remove(userId: string, id: string){
+        async remove(sessionToken: string, id: string){
             //TODO: validation
             //TODO: internal logic
             return await repository.remove(id);

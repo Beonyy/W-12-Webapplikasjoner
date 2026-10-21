@@ -30,17 +30,26 @@ export function createAnimalController(service: AnimalService): AnimalController
     return {
         async list({request}:RequestInfo){
 
-            //TODO:for later.
-            //request.headers.get("Authorization")
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
 
             const userId = ""
             return Response.json(await service.list(userId));
         },
         
         async get({request}:RequestInfo){
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
             const params = parseParams(request)
             const {id} = params;
-            const userId = ""
             
             // TODO: validate id
             if (!id || typeof id !== "string"){
@@ -50,12 +59,18 @@ export function createAnimalController(service: AnimalService): AnimalController
                 );
             }
             
-            return Response.json(await service.get(userId, id));
+            return Response.json(await service.get(auth, id));
         },
 
         
         async create({request}:RequestInfo){
-            const userId = ""
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
+
             let data : unknown 
             try{
                 data = await request.json();
@@ -72,11 +87,17 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { status: 400},
                 )
             }
-            return Response.json(await service.create(userId, data))
+            return Response.json(await service.create(auth, data))
         },
         
         async update({request}:RequestInfo)  {
-            const userId = "";
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
+
             const params = parseParams(request);
             const {id} = params;
             let data : unknown 
@@ -94,18 +115,28 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { status: 400},
                 )
             }
-            return Response.json(await service.update(userId, id, data))
+            return Response.json(await service.update(auth, id, data))
         },
         
-        async action({request})  {
-            const userId = "";
+        async action({request} : RequestInfo)  {
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
             return Response.json(
                 {error:' Invalid request body'},
                 { status: 400},)
             },
 
         async remove({request}:RequestInfo)  {
-            const userId = "";
+            const auth = request.headers.get("Authorization")
+            if (!auth){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
             const params = parseParams(request);
             const {id} = params;
             // TODO: validate id
@@ -115,7 +146,7 @@ export function createAnimalController(service: AnimalService): AnimalController
                     {status: 400},
                 );
             }
-            return Response.json(await service.remove(userId, id));
+            return Response.json(await service.remove(auth, id));
         },
     };
 }
