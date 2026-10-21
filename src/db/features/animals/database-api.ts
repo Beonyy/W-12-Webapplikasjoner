@@ -11,7 +11,7 @@ export interface AnimalDatabase {
     updateById(id: string, data: Partial<AnimalDb>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
-    hardDelete(id: string): Promise<Result<null>> ;
+    hardDelete(id: string): Promise<Result<null>>;
 }
 
 export function createAnimalDatabase(database: Database) {

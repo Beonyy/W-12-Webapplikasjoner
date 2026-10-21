@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach, afterEach, afterAll } from "vit
 import { eq } from "drizzle-orm";
 import { animals } from "../schema";
 import { Species } from "../enum";
-import { createAnimalRepository } from "../repository";
+import { createAnimalDatabase } from "../database-api";
 import { makeAnimal, makeMockDatabase } from "./helpers";
 import type { NewAnimal, Animal } from "../schema"
 
@@ -42,7 +42,7 @@ describe("createAnimalRepository", () => {
     describe("insertAnimal", () => {
         test("inserts an animal row", async () => {
             //Arrange
-            const repo = createAnimalRepository(mockDb.db);
+            const repo = createAnimalDatabase(mockDb.db);
             const animal: NewAnimal = makeAnimal({ name: "Fido" })
 
             //Act

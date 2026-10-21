@@ -1,6 +1,6 @@
 export type AnimalImage = {}
 
-export type Animal = {
+export type NewAnimal = {
     name : string;
     species: string;
     nickname: string;
