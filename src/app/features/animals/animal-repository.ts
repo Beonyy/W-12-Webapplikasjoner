@@ -1,10 +1,8 @@
-
 import { Result} from "@/shared/types/result";
 import { Animal, AnimalCreateParams, AnimalUpdateParams } from "./animal-types";
 import { animalDatabase,AnimalDatabase } from "@/db/features/animals/database-api";
 import { toAnimal } from "@/db/features/animals/mappers";
 // import { create, getById, updateById } from "@/db/features/animals/database-api";
-
 
 export interface AnimalRepository {
     create: (animalCreateParams: AnimalCreateParams) => Promise<Result<Animal>>;

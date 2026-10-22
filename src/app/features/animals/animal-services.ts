@@ -5,13 +5,13 @@
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
 import { AnimalRepository, animalRepository } from "./animal-repository";
-import { Animal, AnimalCreateParams } from "./animal-types";
+import { NewAnimal, AnimalCreateParams } from "./animal-types";
 
 export interface AnimalService {
-    list(userId: string): Promise<Result<Animal[]>>;
-    get(userId: string, id: string): Promise<Result<Animal>>;
-    create(userId: string, input: AnimalCreateParams): Promise<Result<Animal>>;
-    update(userId: string, id: string, input: any): Promise<Result<Animal>>;
+    list(userId: string): Promise<Result<NewAnimal[]>>;
+    get(userId: string, id: string): Promise<Result<NewAnimal>>;
+    create(userId: string, input: AnimalCreateParams): Promise<Result<NewAnimal>>;
+    update(userId: string, id: string, input: any): Promise<Result<NewAnimal>>;
     remove(userId: string, id: string): Promise<Result<null>>;
 }
 

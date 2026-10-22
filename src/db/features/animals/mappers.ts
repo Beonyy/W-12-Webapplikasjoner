@@ -1,9 +1,9 @@
 import type { NewAnimal } from "@app/features/animals/animal-types"
 import type { AnimalDb } from "./types"
 
-export function toNewAnimal(animalDb: AnimalDb, images: string[]): Animal {
+export function toNewAnimal(animalDb: AnimalDb, images: string[]): NewAnimal {
     return {
-        id: animalDb.id,
+        //id: animal.id,
         name: animalDb.name,
         species: animalDb.species,
         nickname: animalDb.nickname ?? "",
