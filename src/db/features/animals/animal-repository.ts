@@ -42,17 +42,17 @@ export function createAnimalRepository(database: Database) {
 
             try {
                 const result = await database.query.animals.findFirst({
-                    where: { id }
+                    where: {id, deleted: false}
                 });
 
-                if (result === undefined){
+                if (!result){
                     return {
-                    success: false,
-                    error: {
-                        code: Errors.NOT_FOUND,
-                        message: "Could not find requested ID."
-                    }
-                };
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Could not find requested ID."
+                        }
+                    };
                 }
                 return {
                     success: true,
@@ -63,8 +63,8 @@ export function createAnimalRepository(database: Database) {
                 return {
                     success: false,
                     error: {
-                        code: Errors.NOT_FOUND,
-                        message: "Could not find requested ID."
+                        code: Errors.INTERNAL_SERVER_ERROR,
+                        message: "An error occurred while retrieving the resource."
                     }
                 };
             };

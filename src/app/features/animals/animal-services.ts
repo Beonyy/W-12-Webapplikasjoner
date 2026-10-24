@@ -5,7 +5,6 @@
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
 import { AnimalRepository, animalRepository } from "../../../db/features/animals/animal-repository";
-import { AnimalDb } from "../../../db/features/animals/animal-types"
 import { Animal, AnimalCreateParams } from "./animal-types";
 import { toAnimal } from "./animal-mappers";
 
@@ -13,7 +12,7 @@ export interface AnimalService {
     list(userId: string): Promise<Result<Animal[]>>;
     get(userId: string, id: string): Promise<Result<Animal>>;
     create(userId: string, input: AnimalCreateParams): Promise<Result<Animal>>;
-    update(userId: string, id: string, input: any): Promise<Result<Animal>>;
+    update(userId: string, id: string, input: Partial<AnimalCreateParams>): Promise<Result<Animal>>;
     remove(userId: string, id: string): Promise<Result<null>>;
 }
 
@@ -45,9 +44,9 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
                 data: toAnimal(result.data, [])
             };
         },
-        async create(input: Omit<AnimalDb, 'id' | 'created_at' | 'updated_at' | 'deleted'>){
+        async create(userID: string, input: AnimalCreateParams){
             //TODO: validation
-            //TODO: internal logic
+            //TODO: more internal logic ?
             const result = await repository.create(input);
             if (!result.success) return result;
 
@@ -56,15 +55,27 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
                 data: toAnimal(result.data, [])
             }
         },
-        async update(userId: string, id: string, input: any){
+        async update(userId: string, id: string, input: Partial<AnimalCreateParams>){
             //TODO: validation
             //TODO: internal logic
-            return await repository.update(id, input);
+            const result = await repository.updateById(id, input);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            };
         },
         async remove(userId: string, id: string){
             //TODO: validation
             //TODO: internal logic
-            return await repository.remove(id);
+            const result = await repository.softDelete(id);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: null
+            }
         },
     };
 }
