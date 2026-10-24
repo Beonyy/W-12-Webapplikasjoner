@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import type { Animal, NewAnimal } from "../schema";
+import type { Animal, NewAnimal } from "../animal-schema";
 import { Species } from "../enum";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { createId } from "@paralleldrive/cuid2";

@@ -1,11 +1,11 @@
-import { animals } from "@/db/features/animals/schema";
+import { animals } from "@/db/features/animals/animal-schema";
 import { eq, and } from "drizzle-orm";
 import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
-import { AnimalDb } from "./types";
+import { AnimalDb } from "./animal-types";
 
-export interface AnimalDatabase {
+export interface AnimalRepository {
     create(data: AnimalDb):Promise<Result<AnimalDb>>;
     getById(id: string):Promise<Result<AnimalDb>>;
     updateById(id: string, data: Partial<AnimalDb>):Promise<Result<AnimalDb>>;
@@ -14,7 +14,7 @@ export interface AnimalDatabase {
     hardDelete(id: string): Promise<Result<null>> ;
 }
 
-export function createAnimalDatabase(database: Database) {
+export function createAnimalRepository(database: Database) {
     return {
         async create(data: AnimalDb): Promise<Result<AnimalDb>> {
             try {
@@ -259,4 +259,4 @@ export function createAnimalDatabase(database: Database) {
     }
 }
 
-export const animalDatabase = createAnimalDatabase(drizzleDatabaseClient);
+export const animalRepository = createAnimalRepository(drizzleDatabaseClient);

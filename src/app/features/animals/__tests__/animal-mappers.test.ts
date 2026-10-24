@@ -1,8 +1,8 @@
 import { describe, test, expect } from "vitest";
 import type { Animal } from "../../../../app/features/animals/types";
-import type { AnimalDb } from "../types";
-import { toAnimal, toAnimalDb } from "../mappers";
-import { makeAnimal, makeAnimalDb } from "./helpers";
+import type { AnimalDb } from "../../../../db/features/animals/animal-types";
+import { toAnimal, toAnimalDb } from "../animal-mappers";
+import { makeAnimal, makeAnimalDb } from "../../../../db/features/animals/__tests__/helpers";
 
 describe("toAnimal", () => {
     test("converts string to array", () => {

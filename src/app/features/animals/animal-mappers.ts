@@ -1,5 +1,5 @@
 import type { Animal } from "@app/features/animals/animal-types"
-import type { AnimalDb } from "./types"
+import type { AnimalDb } from "../../../db/features/animals/animal-types"
 
 export function toAnimal(animalDb: AnimalDb, images: string[]): Animal {
     return {

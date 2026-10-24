@@ -1,10 +1,10 @@
 import { describe, test, expect, vi, beforeEach, afterEach, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
-import { animals } from "../schema";
+import { animals } from "../animal-schema";
 import { Species } from "../enum";
 import { createAnimalRepository } from "../repository";
 import { makeAnimal, makeMockDatabase } from "./helpers";
-import type { NewAnimal, Animal } from "../schema"
+import type { NewAnimal, Animal } from "../animal-schema"
 
 
 const { closeTestDatabase } = vi.hoisted(() => ({

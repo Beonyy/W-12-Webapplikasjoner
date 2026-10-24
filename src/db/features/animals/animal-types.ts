@@ -1,4 +1,4 @@
-import { animals } from "@/db/features/animals/schema";
+import { animals } from "@/db/features/animals/animal-schema";
 // export type AnimalDb = {
 //     id: string;
 //     name: string;
