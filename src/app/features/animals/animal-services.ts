@@ -4,8 +4,10 @@
 // Her mapper vi muligens data for å ha en konsistent struktur
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
-import { AnimalRepository, animalRepository } from "./animal-repository";
+import { AnimalRepository, animalRepository } from "../../../db/features/animals/animal-repository";
+import { AnimalDb } from "../../../db/features/animals/animal-types"
 import { Animal, AnimalCreateParams } from "./animal-types";
+import { toAnimal } from "./animal-mappers";
 
 export interface AnimalService {
     list(userId: string): Promise<Result<Animal[]>>;
@@ -19,20 +21,40 @@ export interface AnimalService {
 //TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
-        async list(userId: string){
+        async list(userId: string)
+        {
             //TODO: validation
-            //TODO: internal logic
-            return await repository.list()
+            //TODO: more internal logic ?
+            const result = await repository.getAll();
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: result.data.map(animalDb => toAnimal(animalDb, []))
+            };
         },
-        async get(userId: string, id: string){
+        async get(userId: string, id: string)
+        {
             //TODO: validation
-            //TODO: internal logic
-            return await repository.get(id);
+            //TODO: more internal logic ?
+            const result =  await repository.getById(id);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            };
         },
-        async create(userId: string, input: AnimalCreateParams){
+        async create(input: Omit<AnimalDb, 'id' | 'created_at' | 'updated_at' | 'deleted'>){
             //TODO: validation
             //TODO: internal logic
-            return await repository.create(input);
+            const result = await repository.create(input);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            }
         },
         async update(userId: string, id: string, input: any){
             //TODO: validation
