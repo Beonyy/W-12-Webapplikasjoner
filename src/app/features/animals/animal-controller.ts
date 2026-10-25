@@ -5,17 +5,54 @@
 // Her sender vi en Response tilbake med et gitt format {ok: true, data: }
 // eller {ok: false: error: {}}
 
-import { Result } from "@/shared/types/result";
-import { ErrorCode } from "@/shared/types/errors";
-import { DefaultAppContext } from "rwsdk/worker";
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
-import { isAnimal, isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
+import { isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
 
 
 export function parseParams(request:Request){
     return Object.fromEntries(new URL(request.url).searchParams);
 }
+
+// NOTE: should be moved somewhere else! This is only a temporary home
+// NOTE: auth types should obviously be something else in prod.
+function isActionAuthorized( action : string, auth: string):boolean{
+    switch (action){
+        case "list":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "get":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "create":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return false;
+            break;
+        case "update":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "remove":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        default:
+            return false;
+    }
+    return false;
+}
+
+
+
+
+
 
 export interface AnimalController {
     list(request : RequestInfo): Promise<Response>;
@@ -31,19 +68,18 @@ export function createAnimalController(service: AnimalService): AnimalController
         async list({request}:RequestInfo){
 
             const auth = request.headers.get("Authorization")
-            if (!auth){
+            if (!auth || !isActionAuthorized("list", auth)){
                 return Response.json(
                     { error:'not authorized'},
                     { status: 403},)
             }
 
-            const userId = ""
-            return Response.json(await service.list(userId));
+            return Response.json(await service.list(auth));
         },
         
         async get({request}:RequestInfo){
             const auth = request.headers.get("Authorization")
-            if (!auth){
+            if (!auth || !isActionAuthorized("get", auth)){
                 return Response.json(
                     { error:'not authorized'},
                     { status: 403},)
@@ -65,7 +101,7 @@ export function createAnimalController(service: AnimalService): AnimalController
         
         async create({request}:RequestInfo){
             const auth = request.headers.get("Authorization")
-            if (!auth){
+            if (!auth || !isActionAuthorized("create", auth)){
                 return Response.json(
                     { error:'not authorized'},
                     { status: 403},)
@@ -92,7 +128,7 @@ export function createAnimalController(service: AnimalService): AnimalController
         
         async update({request}:RequestInfo)  {
             const auth = request.headers.get("Authorization")
-            if (!auth){
+            if (!auth || !isActionAuthorized("update", auth)){
                 return Response.json(
                     { error:'not authorized'},
                     { status: 403},)
@@ -119,12 +155,13 @@ export function createAnimalController(service: AnimalService): AnimalController
         },
         
         async action({request} : RequestInfo)  {
-            const auth = request.headers.get("Authorization")
-            if (!auth){
-                return Response.json(
-                    { error:'not authorized'},
-                    { status: 403},)
-            }
+            // TODO: no actions currently, so....
+            // const auth = request.headers.get("Authorization")
+            // if (!auth || !isActionAuthorized("action", auth)){
+            //     return Response.json(
+            //         { error:'not authorized'},
+            //         { status: 403},)
+            // }
             return Response.json(
                 {error:' Invalid request body'},
                 { status: 400},)
@@ -132,7 +169,7 @@ export function createAnimalController(service: AnimalService): AnimalController
 
         async remove({request}:RequestInfo)  {
             const auth = request.headers.get("Authorization")
-            if (!auth){
+            if (!auth || !isActionAuthorized("remove", auth)){
                 return Response.json(
                     { error:'not authorized'},
                     { status: 403},)
