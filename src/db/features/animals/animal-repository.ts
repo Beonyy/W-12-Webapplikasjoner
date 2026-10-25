@@ -4,11 +4,12 @@ import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
 import { AnimalDb } from "./animal-types";
+import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 
 export interface AnimalRepository {
-    create(data: AnimalDb):Promise<Result<AnimalDb>>;
+    create(data: AnimalCreateParams):Promise<Result<AnimalDb>>;
     getById(id: string):Promise<Result<AnimalDb>>;
-    updateById(id: string, data: Partial<AnimalDb>):Promise<Result<AnimalDb>>;
+    updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
     hardDelete(id: string): Promise<Result<null>> ;
@@ -16,7 +17,7 @@ export interface AnimalRepository {
 
 export function createAnimalRepository(database: Database) {
     return {
-        async create(data: AnimalDb): Promise<Result<AnimalDb>> {
+        async create(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
             try {
                 const result = await database
                     .insert(animals)
@@ -185,10 +186,7 @@ export function createAnimalRepository(database: Database) {
             };
 
         },
-        async updateById(
-            id: string,
-            data: Partial<AnimalDb>
-        ):Promise<Result<AnimalDb>> {
+        async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
                 const result = await database
                     .update(animals)
