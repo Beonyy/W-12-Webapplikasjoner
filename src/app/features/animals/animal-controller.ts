@@ -16,7 +16,7 @@ export function parseParams(request:Request){
 
 // NOTE: should be moved somewhere else! This is only a temporary home
 // NOTE: auth types should obviously be something else in prod.
-function isActionAuthorized( action : string, auth: string):boolean{
+export function isActionAuthorized( action : string, auth: string):boolean{
     switch (action){
         case "list":
             if (auth === "none") return false;
