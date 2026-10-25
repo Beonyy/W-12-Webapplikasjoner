@@ -4,8 +4,10 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import { createId } from "@paralleldrive/cuid2";
 import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 import { AnimalDb } from "../animal-types";
+import { relations } from "@/db/relations";
+import type { Database as AppDatabase } from "@/db/index";
 
-export function makeMockDatabase() {
+export function makeMockDatabase(): { db: AppDatabase; close: () => void } {
     // making the database exist only in RAM
     const sqlite = new Database(":memory:");
 
@@ -36,8 +38,10 @@ export function makeMockDatabase() {
         );
     `);
 
+    const db = drizzle({ client: sqlite, relations });
+
     return {
-        db: drizzle({ client: sqlite }),
+        db,
         close: () => sqlite.close(),
     };
 }
