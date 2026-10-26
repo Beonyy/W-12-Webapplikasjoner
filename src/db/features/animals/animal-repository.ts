@@ -196,6 +196,16 @@ export function createAnimalRepository(database: Database) {
                         eq(animals.deleted, false)))
                     .returning()
 
+                if (!result[0]) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
+
                 return {
                     success: true,
                     data: result[0]

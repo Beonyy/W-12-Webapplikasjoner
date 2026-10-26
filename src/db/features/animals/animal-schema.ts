@@ -2,7 +2,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createId } from "@paralleldrive/cuid2";
 
 export const animals = sqliteTable("animals", {
-    id: text("animalId").primaryKey().$defaultFn(() => createId()),
+    id: text("id").primaryKey().$defaultFn(() => createId()),
     name: text("name").notNull(),
     species: text("species").notNull(),
     nickname: text("nickname"),
