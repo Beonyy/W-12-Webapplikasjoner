@@ -4,7 +4,8 @@
 // Her mapper vi muligens data for å ha en konsistent struktur
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
-import { AnimalRepository, animalRepository } from "../../../db/features/animals/animal-repository";
+import { AnimalRepository } from "../../../db/features/animals/animal-repository";
+import { animalRepository } from "../../../db/features/animals/animal-repository-instance";
 import { Animal, AnimalCreateParams } from "./animal-types";
 import { toAnimal } from "./animal-mappers";
 
