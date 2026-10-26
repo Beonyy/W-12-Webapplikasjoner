@@ -13,8 +13,6 @@ export type Animal = {
     // more here, maybe
 }
 
-
-
 export function isAnimal(value: unknown): value is Animal{
     if (typeof value !== 'object' || value === null ){
         return false;

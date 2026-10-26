@@ -3,7 +3,7 @@ CREATE TABLE `animal_audit_log` (
 	`animalId` text NOT NULL,
 	`action` text NOT NULL,
 	`changed_at` integer NOT NULL,
-	CONSTRAINT `fk_animal_audit_log_animalId_animals_animalId_fk` FOREIGN KEY (`animalId`) REFERENCES `animals`(`animalId`) ON DELETE CASCADE
+	CONSTRAINT `fk_animal_audit_log_animalId_animals_animalId_fk` FOREIGN KEY (`animalId`) REFERENCES `animals`(`id`) ON DELETE CASCADE
 );
 --> statement-breakpoint
 CREATE TABLE `animals` (
