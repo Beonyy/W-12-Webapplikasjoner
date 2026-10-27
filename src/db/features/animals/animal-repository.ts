@@ -7,7 +7,7 @@ import { AnimalDb } from "./animal-types";
 import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 
 export interface AnimalRepository {
-    create(data: AnimalCreateParams):Promise<Result<AnimalDb>>;
+    insert(data: AnimalCreateParams):Promise<Result<AnimalDb>>;
     getById(id: string):Promise<Result<AnimalDb>>;
     updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
@@ -17,7 +17,7 @@ export interface AnimalRepository {
 
 export function createAnimalRepository(database: Database) {
     return {
-        async create(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
+        async insert(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
             try {
                 const result = await database
                     .insert(animals)
