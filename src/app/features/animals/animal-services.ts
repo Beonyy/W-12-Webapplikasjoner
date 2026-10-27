@@ -28,7 +28,7 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: result.data.map(animalDb => toAnimal(animalDb, []))
+                data: result.data.map(animalDb => toAnimal(animalDb))
             };
         },
         async get(sessionToken: string, id: string){
@@ -39,7 +39,7 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             };
         },
         async create(sessionToken: string, input: AnimalCreateParams){
@@ -50,7 +50,7 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             }
         },
         async update(sessionToken: string, id: string, input: any){
@@ -61,7 +61,7 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             };
         },
         async remove(sessionToken: string, id: string){

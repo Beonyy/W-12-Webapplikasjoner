@@ -4,12 +4,12 @@ export type Animal = {
     name : string;
     species: string;
     nickname: string;
-    dateOfBirth : Date;
-    characteristics: string[];
+    dateOfBirth : string;
+    characteristics: string;
     housingUnit : string;
     contactInfo: string;
     profileImageUrl: string,
-    images: AnimalImage[];
+    // images: AnimalImage[];
     // more here, maybe
 }
 

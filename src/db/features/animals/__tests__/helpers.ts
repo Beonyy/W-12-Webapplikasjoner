@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import { Species } from "../enum";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { createId } from "@paralleldrive/cuid2";
-import { AnimalCreateParams } from "@/app/features/animals/animal-types";
+import { Animal, AnimalCreateParams } from "@/app/features/animals/animal-types";
 import { AnimalDb } from "../animal-types";
 import { relations } from "@/db/relations";
 import type { Database as AppDatabase } from "@/db/index";
@@ -73,6 +73,20 @@ export function makeAnimalDb(overrides: Partial<AnimalDb> = {}): AnimalDb {
         deleted: false,
         createdAt: new Date("2026-11-10T00:00:00Z"),
         updatedAt: null,
+        ...overrides,
+    }
+}
+
+export function makeAnimal(overrides: Partial<Animal> = {}): Animal {
+    return {
+        name: "Napolion",
+        species: Species.Cat,
+        nickname: "",
+        dateOfBirth: "",
+        characteristics: "",
+        housingUnit: "H1404",
+        contactInfo: "",
+        profileImageUrl: "",
         ...overrides,
     }
 }
