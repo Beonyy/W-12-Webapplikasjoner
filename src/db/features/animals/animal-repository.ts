@@ -1,6 +1,6 @@
 import { animals } from "@/db/features/animals/animal-schema";
 import { eq, and } from "drizzle-orm";
-import { Database } from "@/db";
+import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
 import { AnimalDb } from "./animal-types";
@@ -266,3 +266,5 @@ export function createAnimalRepository(database: Database) {
         }
     }
 }
+
+export const animalRepository = createAnimalRepository(drizzleDatabaseClient);

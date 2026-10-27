@@ -26,10 +26,10 @@ describe("AnimalRepository", () => {
     });
 
     describe("create", () => {
-        test("", async () => {
+        test("happy path", async () => {
             const params = makeAnimalCreateParams({ nickname: "Kitty" });
 
-            const result = await repository.create(params);
+            const result = await repository.insert(params);
 
             expect(result.success).toBe(true);
             if(result.success) {
@@ -38,6 +38,12 @@ describe("AnimalRepository", () => {
                 expect(result.data.species).toBe(params.species);
                 
             }
+        });
+
+        test("unhappy path", async () => {
+            const params = makeAnimalCreateParams({ name: "" });
+
+            const result = await repository.insert()
         });
     })
 })

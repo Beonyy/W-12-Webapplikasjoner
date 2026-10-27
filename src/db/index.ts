@@ -1,3 +1,4 @@
+"use server";
 import { drizzle } from "drizzle-orm/d1";
 import type { SQLiteAsyncDatabase } from "drizzle-orm/sqlite-core";
 import { env } from "cloudflare:workers";

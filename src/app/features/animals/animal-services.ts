@@ -5,7 +5,7 @@
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
 import { AnimalRepository } from "../../../db/features/animals/animal-repository";
-import { animalRepository } from "../../../db/features/animals/animal-repository-instance"
+import { animalRepository } from "../../../db/features/animals/animal-repository"
 import { Animal, AnimalCreateParams } from "./animal-types";
 import { toAnimal } from "./animal-mappers";
 
