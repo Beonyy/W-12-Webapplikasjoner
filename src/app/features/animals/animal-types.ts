@@ -32,6 +32,10 @@ export function isAnimal(value: unknown): value is Animal{
     );
 }
 
+export function isAnimalArray(value: unknown): value is Animal[] {
+  return Array.isArray(value) && value.every(isAnimal);
+}
+
 export interface AnimalCreateParams{
     name : string;
     species: string;

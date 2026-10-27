@@ -5,14 +5,14 @@
 
 // Håndterer feil som kan oppstå med fetch og har en konsistent måte å gjøre dette på
 
-import { Animal, AnimalCreateParams } from "./animal-types";
+import { Animal, AnimalCreateParams, isAnimal, isAnimalArray } from "./animal-types";
 import { Result } from "@/shared/types/result";
 
 export interface AnimalApi{
     list(sessionToken:string): Promise<Result<Animal[]>>;
     get(sessionToken:string, id:string): Promise<Result<Animal>>;
-    create(sessionToken:string, animalCreateParams: AnimalCreateParams): Promise<Result<void>>;
-    update(sessionToken:string, id:string, animal:Animal): Promise<Result<void>>;
+    create(sessionToken:string, animalCreateParams: AnimalCreateParams): Promise<Result<Animal>>;
+    update(sessionToken:string, id:string, animal:Animal): Promise<Result<Animal>>;
     action(sessionToken:string): Promise<Result<void>>;
     remove(sessionToken:string, id:string): Promise<Result<void>>;
 }
@@ -33,9 +33,20 @@ export function createAnimalApi(): AnimalApi{
                 }
             })
             if(!response.ok){
-                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
-            return { success:true, data: await response.json() }
+
+            let data: unknown;
+            try{
+                data = await response.json()
+            }catch{
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
+            }
+            if(!isAnimalArray(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
+            }
+
+            return { success:true, data: data}
         },
 
         async get(sessionToken:string, id:string): Promise<Result<Animal>>{
@@ -47,12 +58,23 @@ export function createAnimalApi(): AnimalApi{
                 }
             })
             if(!response.ok){
-                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
-            return { success:true, data: await response.json() }
+
+            let data: unknown;
+            try{
+                data = await response.json()
+            }catch{
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
+            }
+            if (!isAnimal(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
+            }
+
+            return { success:true, data: data}
         },
 
-        async create(sessionToken:string, animalCreateParams: AnimalCreateParams ): Promise<Result<void>>{
+        async create(sessionToken:string, animalCreateParams: AnimalCreateParams ): Promise<Result<Animal>>{
             const response = await fetch('/api/animals',{
                 method: 'POST',
                 headers: {
@@ -62,12 +84,23 @@ export function createAnimalApi(): AnimalApi{
                 body : JSON.stringify(animalCreateParams)
             })
             if(!response.ok){
-                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
-            return { success:true, data: await response.json() }
+
+            let data: unknown;
+            try{
+                data = await response.json()
+            }catch{
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
+            }
+            if (!isAnimal(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
+            }
+
+            return { success:true, data: data}
         },
 
-        async update(sessionToken:string, id:string, animal:Animal): Promise<Result<void>>{
+        async update(sessionToken:string, id:string, animal:Animal): Promise<Result<Animal>>{
              const response = await fetch(`/api/animals/${id}`,{
                 method: 'PUT',
                 headers: {
@@ -77,13 +110,24 @@ export function createAnimalApi(): AnimalApi{
                 body : JSON.stringify(animal)
             })
             if(!response.ok){
-                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
-            return { success:true, data: await response.json() }
+
+            let data: unknown;
+            try{
+                data = await response.json()
+            }catch{
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
+            }
+            if (!isAnimal(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
+            }
+
+            return { success:true, data: data}
         },
 
         async action(sessionToken:string): Promise<Result<void>>{
-            return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+            return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"TODO: not implemented yet"}};
         },
         
         async remove(sessionToken:string, id:string): Promise<Result<void>>{
@@ -95,7 +139,7 @@ export function createAnimalApi(): AnimalApi{
                 }
             })
             if(!response.ok){
-                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
             return { success:true, data: await response.json() }
 
