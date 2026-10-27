@@ -1,5 +1,4 @@
-import { Counter } from "@/components/Counter";
-import { TimeClient } from "@/components/TimeClient";
+
 
 /**
  * En server-komponent. Den kjører på serveren, én gang per forespørsel, og
@@ -25,9 +24,6 @@ export function Home() {
 
       {/* Samme klokke, men rendret i nettleseren. Ser dere to ulike tidspunkt,
           har dere sett forskjellen på server og klient med egne øyne. */}
-      <TimeClient />
-
-      <Counter />
 
       <h2 className="mt-10 text-xl font-semibold">Prøv dette</h2>
       <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-700">
