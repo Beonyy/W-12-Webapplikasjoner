@@ -5,7 +5,7 @@ import { Result } from "@/shared/types/result";
 const mockAnimals : AnimalDb[] = [];
 export const mockAnimalRepository : AnimalRepository = {
 
-    async create(data: AnimalDb):Promise<Result<AnimalDb>>{
+    async insert(data: AnimalDb):Promise<Result<AnimalDb>>{
         mockAnimals.push(data);
         return {
             success:true,

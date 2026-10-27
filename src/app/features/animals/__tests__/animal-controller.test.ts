@@ -41,7 +41,7 @@ describe("user create", ()=>{
         
         
         const _requestInfo = createRequestInfo({
-            request: new Request("s.com", {
+            request: new Request("https://example.com/", {
                 method: "POST",
                 headers:  {
                     'Content-Type': 'application/json',
@@ -60,9 +60,11 @@ describe("user create", ()=>{
             expect(isResult(result)).toBe(true);
             if (!isResult(result)) throw new Error("Expected a Result");
 
+            
             expect(result.success).toBe(true);
             if (!result.success) throw new Error("Expected success");
-
+            
+            console.log("--------------------------DATA: ",result.data)
             expect(isAnimal(result.data)).toBe(true);
             if (!isAnimal(result.data)) throw new Error("Expected an animal");
 
