@@ -137,7 +137,7 @@ describe("AnimalRepository", () => {
                 expect(result.data).toBe(undefined);
             }
         });
-        test("overwrites ID?", async () => {
+        test("does not overwrite ID when passed in update payload", async () => {
             const id = "101";
             const params = makeAnimalCreateParams({ id: id });
             await repository.insert(params);
