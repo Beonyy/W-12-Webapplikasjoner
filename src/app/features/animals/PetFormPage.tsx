@@ -86,6 +86,8 @@ export default function PetFormPage() {
     // Inntil create begynner å returnere Animal, bruker vi UI-objektet lokalt
     setAnimals((prev) => [...prev, uiAnimal]);
     console.log("Registrert nytt dyr:", uiAnimal);
+
+    return result;
   }
 
   return (

@@ -5,12 +5,12 @@ import AnimalProfil from "./AnimalProfil";
 // Backend Animal-type
 import type { Animal as BackendAnimal } from "../animal-types";
 
-// UI Animal-type (den du brukte i PetRegistration/PetFormPage)
+// UI Animal-type (den brukt i PetRegistration/PetFormPage)
 import type { Animal as UiAnimal } from "./Animal";
 
 // Mapping fra backend-modell -> UI-modell
 function mapBackendToUi(a: BackendAnimal): UiAnimal {
-  // Konverter Date -> string; velg formatet du vil ha i UI
+  // Konverter Date -> string;
   const dobString =
     a.dateOfBirth instanceof Date
       ? a.dateOfBirth.toISOString().slice(0, 10) // "YYYY-MM-DD"
