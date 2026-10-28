@@ -4,14 +4,16 @@
 // Her mapper vi muligens data for å ha en konsistent struktur
 // Her tilgjengeligjør vi funksjonalitet som "actions.ts" og "controller" trenger
 import { Result } from "@/shared/types/result";
-import { AnimalRepository, animalRepository } from "./animal-repository";
+import { AnimalRepository } from "../../../db/features/animals/animal-repository";
+import { animalRepository } from "../../../db/features/animals/animal-repository"
 import { Animal, AnimalCreateParams } from "./animal-types";
+import { toAnimal } from "./animal-mappers";
 
 export interface AnimalService {
     list(userId: string): Promise<Result<Animal[]>>;
     get(userId: string, id: string): Promise<Result<Animal>>;
     create(userId: string, input: AnimalCreateParams): Promise<Result<Animal>>;
-    update(userId: string, id: string, input: any): Promise<Result<Animal>>;
+    update(userId: string, id: string, input: Partial<AnimalCreateParams>): Promise<Result<Animal>>;
     remove(userId: string, id: string): Promise<Result<null>>;
 }
 
@@ -19,30 +21,62 @@ export interface AnimalService {
 //TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
-        async list(userId: string){
+        async list(userId: string)
+        {
             //TODO: validation
-            //TODO: internal logic
-            return await repository.list()
+            //TODO: more internal logic ?
+            const result = await repository.getAll();
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: result.data.map(animalDb => toAnimal(animalDb, []))
+            };
         },
-        async get(userId: string, id: string){
+        async get(userId: string, id: string)
+        {
             //TODO: validation
-            //TODO: internal logic
-            return await repository.get(id);
+            //TODO: more internal logic ?
+            const result =  await repository.getById(id);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            };
         },
-        async create(userId: string, input: AnimalCreateParams){
+        async create(userID: string, input: AnimalCreateParams){
             //TODO: validation
-            //TODO: internal logic
-            return await repository.create(input);
+            //TODO: more internal logic ?
+            const result = await repository.insert(input);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            }
         },
-        async update(userId: string, id: string, input: any){
+        async update(userId: string, id: string, input: Partial<AnimalCreateParams>){
             //TODO: validation
             //TODO: internal logic
-            return await repository.update(id, input);
+            const result = await repository.updateById(id, input);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: toAnimal(result.data, [])
+            };
         },
         async remove(userId: string, id: string){
             //TODO: validation
             //TODO: internal logic
-            return await repository.remove(id);
+            const result = await repository.softDelete(id);
+            if (!result.success) return result;
+
+            return {
+                success: true,
+                data: null
+            }
         },
     };
 }

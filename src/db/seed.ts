@@ -6,7 +6,8 @@
 // startet. Da slipper dere å lure på om feilen ligger i dataene.
 import { defineScript } from "rwsdk/worker";
 import { drizzle } from "drizzle-orm/d1";
-import { users, tasks } from "./schema";
+
+/*
 
 export const seedData = async (env: Env) => {
   const db = drizzle(env.DB);
@@ -44,3 +45,5 @@ export default defineScript(async ({ env }) => {
   await seedData(env);
   return Response.json({ success: true });
 });
+
+*/

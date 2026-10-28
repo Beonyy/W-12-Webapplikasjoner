@@ -1,22 +1,23 @@
-import { animals } from "@/db/features/animals/schema";
+import { animals } from "@/db/features/animals/animal-schema";
 import { eq, and } from "drizzle-orm";
 import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
-import { AnimalDb } from "./types";
+import { AnimalDb } from "./animal-types";
+import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 
-export interface AnimalDatabase {
-    create(data: AnimalDb):Promise<Result<AnimalDb>>;
+export interface AnimalRepository {
+    insert(data: AnimalCreateParams):Promise<Result<AnimalDb>>;
     getById(id: string):Promise<Result<AnimalDb>>;
-    updateById(id: string, data: Partial<AnimalDb>):Promise<Result<AnimalDb>>;
+    updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
     hardDelete(id: string): Promise<Result<null>> ;
 }
 
-export function createAnimalDatabase(database: Database) {
+export function createAnimalRepository(database: Database) {
     return {
-        async create(data: AnimalDb): Promise<Result<AnimalDb>> {
+        async insert(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
             try {
                 const result = await database
                     .insert(animals)
@@ -42,17 +43,17 @@ export function createAnimalDatabase(database: Database) {
 
             try {
                 const result = await database.query.animals.findFirst({
-                    where: { id }
+                    where: {id, deleted: false}
                 });
 
-                if (result === undefined){
+                if (!result){
                     return {
-                    success: false,
-                    error: {
-                        code: Errors.NOT_FOUND,
-                        message: "Could not find requested ID."
-                    }
-                };
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Could not find requested ID."
+                        }
+                    };
                 }
                 return {
                     success: true,
@@ -63,8 +64,8 @@ export function createAnimalDatabase(database: Database) {
                 return {
                     success: false,
                     error: {
-                        code: Errors.NOT_FOUND,
-                        message: "Could not find requested ID."
+                        code: Errors.INTERNAL_SERVER_ERROR,
+                        message: "An error occurred while retrieving the resource."
                     }
                 };
             };
@@ -185,10 +186,7 @@ export function createAnimalDatabase(database: Database) {
             };
 
         },
-        async updateById(
-            id: string,
-            data: Partial<AnimalDb>
-        ):Promise<Result<AnimalDb>> {
+        async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
                 const result = await database
                     .update(animals)
@@ -197,6 +195,16 @@ export function createAnimalDatabase(database: Database) {
                         eq(animals.id, id),
                         eq(animals.deleted, false)))
                     .returning()
+
+                if (!result[0]) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
 
                 return {
                     success: true,
@@ -259,4 +267,4 @@ export function createAnimalDatabase(database: Database) {
     }
 }
 
-export const animalDatabase = createAnimalDatabase(drizzleDatabaseClient);
+export const animalRepository = createAnimalRepository(drizzleDatabaseClient);

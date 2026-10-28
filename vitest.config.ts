@@ -22,6 +22,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
+      "@shared": resolve(__dirname, "src/shared"),
+      "cloudflare:workers": resolve(
+        __dirname,
+        "src/test/test-env.ts"
+      )
     },
   },
   test: {
@@ -34,10 +39,13 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["src/**/*.{ts,tsx}"],
+      include: [
+        "src/**/*.{ts,tsx}",
+        "src/**/__tests__/**",
+        "src/**/__tests__/**/*.test.ts",
+      ],
       exclude: [
         "src/test/**",
-        "src/**/__tests__/**",
         "src/client.tsx",
         "src/**/*.d.ts",
       ],

@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "b9f5d56b-3540-40a9-a777-0dd02aa34b73",
+  "id": "d7dae7da-390c-483e-93f2-86a50cf0b728",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -60,7 +60,7 @@
       "autoincrement": false,
       "default": null,
       "generated": null,
-      "name": "animalId",
+      "name": "id",
       "entityType": "columns",
       "table": "animals"
     },
@@ -180,12 +180,12 @@
       ],
       "tableTo": "animals",
       "columnsTo": [
-        "animalId"
+        "id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "nameExplicit": false,
-      "name": "fk_animal_audit_log_animalId_animals_animalId_fk",
+      "name": "fk_animal_audit_log_animalId_animals_id_fk",
       "entityType": "fks",
       "table": "animal_audit_log"
     },
@@ -200,7 +200,7 @@
     },
     {
       "columns": [
-        "animalId"
+        "id"
       ],
       "nameExplicit": false,
       "name": "animals_pk",
