@@ -188,9 +188,12 @@ export function createAnimalRepository(database: Database) {
         },
         async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
+                //Maintaining DB integrity by disallowing updates to the id field
+                const { id: _, ...sanitizedData } = data;
+
                 const result = await database
                     .update(animals)
-                    .set(data)
+                    .set(sanitizedData)
                     .where(and(
                         eq(animals.id, id),
                         eq(animals.deleted, false)))
@@ -225,8 +228,20 @@ export function createAnimalRepository(database: Database) {
             try {
                 const result = (await database.update(animals)
                     .set({ deleted: true })
-                    .where(eq(animals.id, id))
+                    .where(and(
+                        eq(animals.id, id),
+                        eq(animals.deleted, false)))
                     .returning())[0]
+            
+                if (!result[0]) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
 
                 return {
                     success: true,
@@ -248,6 +263,16 @@ export function createAnimalRepository(database: Database) {
                 await database
                     .delete(animals)
                     .where(eq(animals.id, id));
+                
+                if (!result[0]) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
 
                 return {
                     success: true,

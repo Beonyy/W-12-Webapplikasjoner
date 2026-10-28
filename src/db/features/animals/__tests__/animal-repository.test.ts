@@ -27,7 +27,7 @@ describe("AnimalRepository", () => {
     });
 
     describe("insert", () => {
-        test("should successfully insert data when valid data is provided", async () => {
+        test("should return success with inserted animal when valid data is provided", async () => {
             const nickname = "Kitty";
             const params = makeAnimalCreateParams({ nickname: nickname });
 
@@ -52,8 +52,7 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return failure result when the database is down", async () => {
-            const id = 101;
-            const params = makeAnimalCreateParams({ id: id });
+            const params = makeAnimalCreateParams();
             mockDb.close();
 
             const result = await repository.insert(params);
@@ -65,8 +64,8 @@ describe("AnimalRepository", () => {
         })
     });
     describe("getById", () => {
-        test("should return animal when id exists", async () => {
-            const id = 101.0;
+        test("should return success with inserted animal when id exists", async () => {
+            const id = "101";
             const name = "Queen of England";
             const params = makeAnimalDb({ id: id, name: name });
             await repository.insert(params);
@@ -79,7 +78,6 @@ describe("AnimalRepository", () => {
                 expect(result.data.name).toBe(params.name);
                 expect(result.data.housingUnit).toBe(params.housingUnit);
             }
-
         });
         test("should return failure result when ID does not exist", async () => {
             const result = await repository.getById(100);
@@ -91,7 +89,7 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return failure result when record has been soft deleted", async () => {
-            const id = 101;
+            const id = "101";
             const params = makeAnimalDb({ id: id, deleted: true });
             await repository.insert(params);
 
@@ -103,7 +101,7 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return failure result when the database is down", async () => {
-            const id = 101;
+            const id = "101";
             mockDb.close();
 
             const result = await repository.getById(id);
@@ -112,6 +110,54 @@ describe("AnimalRepository", () => {
             if(!result.success) {
                 expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
             }
+        });
+    });
+    describe("updateById", () => {
+        test("should return updated animal when valid data is provided", async () => {
+            const id = "101";
+            const oldNickname = "Old name";
+            const newNickname = "New name";
+            const params = makeAnimalDb({ id: id, nickname: oldNickname }); 
+            await repository.insert(params);
+
+            const result = await repository.updateById(id, { nickname: newNickname });
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data.nickname).toBe("New name")
+                expect(result.data.id).toBeCloseTo(id)
+            }
+        });
+        test("should return failure result when ID does not exist", async () => {
+            const result = await repository.updateById(100);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.NOT_FOUND);
+                expect(result.data).toBe(undefined);
+            }
+        });
+        test("overwrites ID?", async () => {
+            const id = "101";
+            const params = makeAnimalCreateParams({ id: id });
+            await repository.insert(params);
+            const newData: Partial<AnimalCreateParams> = {
+                id: "102",
+                nickname: "Kitty",
+            }
+
+            const result = await repository.updateById(id, newData);
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data.id).toBeCloseTo(101)
+            }
+        });
+        test("updates soft deleted record?", async () => {
+
+        });
+        test("db is down", async () => {
+
         });
     });
     describe("getAll", () => {
@@ -144,11 +190,19 @@ describe("AnimalRepository", () => {
                 expect(result.data).toHaveLength(expectedCount);
             }
         });
-        test("when record has been soft deleted", async () => {
+        test("should return only non-deleted records when both soft deleted and non-deleted exist", async () => {
+            const deletedParams = makeAnimalDb({ name: "I don't exist", deleted: true });
+            const nonDeletedParams = makeAnimalDb({ name: "I exist", deleted: false });
+            await repository.insert(deletedParams);
+            await repository.insert(nonDeletedParams);
 
-        });
-        test("unhappy path", async () => {
+            const result = await repository.getAll();
 
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data).toHaveLength(1);
+                expect(result.data[0].name).toBe("I exist");
+            }
         });
         test("when database is down", async () => {
             mockDb.close();
