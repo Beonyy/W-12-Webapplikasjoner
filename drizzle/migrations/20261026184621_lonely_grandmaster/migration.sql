@@ -5,7 +5,7 @@ CREATE TABLE `animal_audit_log` (
 	`changed_at` integer NOT NULL,
 	CONSTRAINT `fk_animal_audit_log_animalId_animals_id_fk` FOREIGN KEY (`animalId`) REFERENCES `animals`(`id`) ON DELETE CASCADE
 );
-
+--> statement-breakpoint
 CREATE TABLE `animals` (
 	`id` text PRIMARY KEY,
 	`name` text NOT NULL,
