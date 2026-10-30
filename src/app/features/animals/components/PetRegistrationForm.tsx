@@ -1,13 +1,17 @@
 "use client"
 
 import { useState } from 'react'
-import type { Animal, Species } from './Animal'
+import type { Species } from './Animal'
+import { Animal } from '../animal-types';
 
 
 // Props til PetRegistration 
 type PetRegistrationProps = {
     onRegister?: (animal: Animal) => void; // Funksjonen som mottar et dyr når skjema sendes inn
 };
+
+
+const TEMP_AUTH = "user"
 
 export default function PetRegistration ({ onRegister }: Readonly<PetRegistrationProps>) {
 
@@ -16,8 +20,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [species, setSpecies] = useState<Species>("Velg type dyr");
     const [characteristics, setCharacteristics] = useState("");
-    const [owner, setOwner] = useState("");
-    const [address, setAddress] = useState("");
+    const [housingUnit, setHousingUnit] = useState("");
     const [contactInfo, setContactInfo] = useState("");
 
     // Submit-funksjonaliteten
@@ -27,13 +30,13 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
         // Bygger et Animal-objekt basert på gjeldende state.
         const animal: Animal = {
             name,
+            species,
             nickname,
             dateOfBirth,
-            species,
             characteristics,
-            owner,
-            address,
+            housingUnit,
             contactInfo,
+            profileImageUrl:""
         };
 
         if (onRegister) {
@@ -85,18 +88,11 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                     onChange={(e) => setCharacteristics(e.target.value)}
                 />
 
-                <label>Eier: </label>
+                <label>Boenhet: </label>
                 <input 
                     type="text"
-                    value={owner}
-                    onChange={(e) => setOwner(e.target.value)}
-                />
-
-                <label>Adresse: </label>
-                <input 
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    value={housingUnit}
+                    onChange={(e) => setHousingUnit(e.target.value)}
                 />
 
                 <label>Kontaktinformasjon: </label>
