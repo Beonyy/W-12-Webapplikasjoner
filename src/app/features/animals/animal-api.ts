@@ -6,7 +6,7 @@
 // Håndterer feil som kan oppstå med fetch og har en konsistent måte å gjøre dette på
 
 import { Animal, AnimalCreateParams, isAnimal, isAnimalArray } from "./animal-types";
-import { Result } from "@/shared/types/result";
+import { isResult, Result } from "@/shared/types/result";
 
 export interface AnimalApi{
     list(sessionToken:string): Promise<Result<Animal[]>>;
@@ -42,11 +42,19 @@ export function createAnimalApi(): AnimalApi{
             }catch{
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
             }
-            if(!isAnimalArray(data)){
+
+            if(!isResult(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid data"}};    
+            }
+            if(!data.success){
+                return data;
+            }
+
+            if(!isAnimalArray(data.data)){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
             }
 
-            return { success:true, data: data}
+            return data as Result<Animal[]>;
         },
 
         async get(sessionToken:string, id:string): Promise<Result<Animal>>{
@@ -67,11 +75,20 @@ export function createAnimalApi(): AnimalApi{
             }catch{
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
             }
-            if (!isAnimal(data)){
+
+            if(!isResult(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid data"}};    
+            }
+            if(!data.success){
+                return data;
+            }
+            if (!isAnimal(data.data)){
+                console.error("INVALID DATA: ", data)
+
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
             }
 
-            return { success:true, data: data}
+            return data as Result<Animal>;
         },
 
         async create(sessionToken:string, animalCreateParams: AnimalCreateParams ): Promise<Result<Animal>>{
@@ -93,11 +110,20 @@ export function createAnimalApi(): AnimalApi{
             }catch{
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
             }
-            if (!isAnimal(data)){
+
+            if(!isResult(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid data"}};    
+            }
+            if(!data.success){
+                return data;
+            }
+            if (!isAnimal(data.data)){
+                console.error("INVALID DATA: ", data)
+
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
             }
 
-            return { success:true, data: data}
+            return data as Result<Animal>;
         },
 
         async update(sessionToken:string, id:string, animal:Animal): Promise<Result<Animal>>{
@@ -113,17 +139,26 @@ export function createAnimalApi(): AnimalApi{
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
             }
 
-            let data: unknown;
+               let data: unknown;
             try{
                 data = await response.json()
             }catch{
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid JSON"}};
             }
-            if (!isAnimal(data)){
+
+            if(!isResult(data)){
+                return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid data"}};    
+            }
+            if(!data.success){
+                return data;
+            }
+            if (!isAnimal(data.data)){
+                console.error("INVALID DATA: ", data)
+
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:"Server returned invalid Animal"}};
             }
 
-            return { success:true, data: data}
+            return data as Result<Animal>;
         },
 
         async action(sessionToken:string): Promise<Result<void>>{

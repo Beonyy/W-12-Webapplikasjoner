@@ -3,33 +3,12 @@
 import { useEffect, useState } from "react";
 import { animalApi } from "../animal-api";
 import AnimalProfil from "./AnimalProfil";
-// Backend Animal-type
-import type { Animal as BackendAnimal } from "../animal-types";
-// UI Animal-type (den brukt i PetRegistration/PetFormPage)
-import type { Animal as UiAnimal } from "./Animal";
+import type { Animal } from "../animal-types";
 import { Filtering } from "./Filtering";
 
-// Samme mapping som i Animals.tsx
-function mapBackendToUi(a: BackendAnimal): UiAnimal {
-  const dobString =
-    a.dateOfBirth instanceof Date
-      ? a.dateOfBirth.toISOString().slice(0, 10)
-      : String(a.dateOfBirth);
+const TEMP_AUTH = "user"
 
-  return {
-    id: undefined,
-    name: a.name,
-    nickname: a.nickname,
-    dateOfBirth: dobString,
-    species: a.species as UiAnimal["species"],
-    characteristics: a.characteristics.join(", "),
-    owner: a.housingUnit,
-    address: "",
-    contactInfo: a.contactInfo,
-  };
-}
-
-function animalMatchesWords(animal: UiAnimal, words: string[]): boolean {
+function animalMatchesWords(animal: Animal, words: string[]): boolean {
   if (words.length === 0) {
     return true; // ingen filter -> alltid treff
   }
@@ -40,8 +19,7 @@ function animalMatchesWords(animal: UiAnimal, words: string[]): boolean {
     animal.nickname,
     animal.species,
     animal.characteristics,
-    animal.owner,
-    animal.address,
+    animal.housingUnit,
     animal.contactInfo,
   ]
     .filter(Boolean)
@@ -53,8 +31,8 @@ function animalMatchesWords(animal: UiAnimal, words: string[]): boolean {
 }
 
 export function PetSearch() {
-  const [allAnimals, setAllAnimals] = useState<UiAnimal[]>([]);
-  const [filteredAnimals, setFilteredAnimals] = useState<UiAnimal[]>([]);
+  const [allAnimals, setAllAnimals] = useState<Animal[]>([]);
+  const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,7 +41,7 @@ export function PetSearch() {
       setLoading(true);
       setError(null);
 
-      const result = await animalApi.list();
+      const result = await animalApi.list(TEMP_AUTH);
 
       if (!result.success) {
         setError("Noe gikk galt, kunne ikke liste opp dyr");
@@ -71,11 +49,10 @@ export function PetSearch() {
         return;
       }
 
-      const backendAnimals: BackendAnimal[] = result.data ?? [];
-      const uiAnimals: UiAnimal[] = backendAnimals.map(mapBackendToUi);
+      const animals: Animal[] = result.data ;
 
-      setAllAnimals(uiAnimals);
-      setFilteredAnimals(uiAnimals); // default: vis alle
+      setAllAnimals(animals);
+      setFilteredAnimals(animals); // default: vis alle
       setLoading(false);
     }
 

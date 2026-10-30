@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import PetRegistration from "./components/PetRegistrationForm";
-import type { Animal as UiAnimal } from "./components/Animal";
+// import type { Animal as UiAnimal } from "./components/Animal";
 import { animalApi } from "./animal-api";
-import type { Animal as BackendAnimal, AnimalCreateParams } from "./animal-types";
+import type { Animal , AnimalCreateParams } from "./animal-types";
+
 
 function calculateAge(dateOfBirth: string) {
   const birthDate = new Date(dateOfBirth);
@@ -13,41 +14,11 @@ function calculateAge(dateOfBirth: string) {
   return age;
 }
 
-// Backend -> UI
-function mapBackendToUi(animal: BackendAnimal): UiAnimal {
-  const dobString =
-    animal.dateOfBirth instanceof Date
-      ? animal.dateOfBirth.toISOString().slice(0, 10)
-      : String(animal.dateOfBirth);
+const TEMP_AUTH = "user"
 
-  return {
-    id: undefined,
-    name: animal.name,
-    nickname: animal.nickname,
-    dateOfBirth: dobString,
-    species: animal.species as UiAnimal["species"],
-    characteristics: animal.characteristics.join(", "),
-    owner: animal.housingUnit,
-    address: "",
-    contactInfo: animal.contactInfo,
-  };
-}
-
-// UI -> Backend (for create)
-function mapUiToBackend(animal: UiAnimal): AnimalCreateParams {
-  return {
-    name: animal.name,
-    species: animal.species,
-    nickname: animal.nickname,
-    dateOfBirth: animal.dateOfBirth,
-    characteristics: animal.characteristics,
-    housingUnit: animal.owner,
-    contactInfo: animal.contactInfo,
-  };
-}
 
 export default function PetFormPage() {
-  const [animals, setAnimals] = useState<UiAnimal[]>([]);
+  const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +27,7 @@ export default function PetFormPage() {
       setLoading(true);
       setError(null);
 
-      const result = await animalApi.list();
+      const result = await animalApi.list(TEMP_AUTH);
 
       if (!result.success) {
         setError("Kunne ikke hente dyr fra API.");
@@ -64,28 +35,29 @@ export default function PetFormPage() {
         return;
       }
 
-      const backendAnimals = (result.data ?? []) as BackendAnimal[];
-      setAnimals(backendAnimals.map(mapBackendToUi));
+      const animals = result.data;
+      setAnimals(animals);
       setLoading(false);
     }
 
     loadAnimals();
   }, []);
 
-  async function handleRegister(uiAnimal: UiAnimal) {
+  async function handleRegister(animal: Animal) {
     setError(null);
 
-    const createParams = mapUiToBackend(uiAnimal);
-    const result = await animalApi.create(createParams);
+    const createParams = animal;
+    const result = await animalApi.create(TEMP_AUTH, createParams);
 
     if (!result.success) {
-      setError("Kunne ikke registrere dyr i API-et.");
+      console.error("API ERROR:", result.error.message);
+      setError("Kunne ikke registrere dyr i API-et."+ result.error.message);
       return;
     }
 
     // Inntil create begynner å returnere Animal, bruker vi UI-objektet lokalt
-    setAnimals((prev) => [...prev, uiAnimal]);
-    console.log("Registrert nytt dyr:", uiAnimal);
+    // setAnimals((prev) => [...prev, animal]);
+    console.log("Registrert nytt dyr:", animal);
 
     return result;
   }
@@ -110,9 +82,8 @@ export default function PetFormPage() {
             <br />
             Alder: {calculateAge(animal.dateOfBirth)} år
             <br />
-            Eier: {animal.owner}
             <br />
-            Adresse: {animal.address}
+            Boenhet: {animal.housingUnit}
             <br />
             Kontaktinfo: {animal.contactInfo}
             <br />

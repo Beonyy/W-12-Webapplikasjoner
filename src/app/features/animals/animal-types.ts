@@ -15,6 +15,8 @@ export type Animal = {
 
 export function isAnimal(value: unknown): value is Animal{
     if (typeof value !== 'object' || value === null ){
+        console.log("false")
+        console.log("false")
         return false;
     }
     
