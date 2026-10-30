@@ -4,6 +4,7 @@ import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
 import { Home } from "@/app/pages/Home";
 import PetFormPage from "./app/features/animals/PetFormPage";
+import PetSearchPage from "./app/features/animals/PetSearchPage";
 
 import { animalsRoutes } from "./app/features/animals/animal-routes";
 
@@ -30,6 +31,7 @@ const app = defineApp([
   // Sider. render(Document, [...]) pakker dem i et helt HTML-dokument.
   render(Document, [route("/", Home)]),
   render(Document, [route("/register-pet", PetFormPage)]),
+  render(Document, [route("/search-pet", PetSearchPage)]),
 ]);
 
 export default { fetch: app.fetch };
