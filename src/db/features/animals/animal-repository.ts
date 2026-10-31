@@ -1,5 +1,5 @@
 import { animals } from "@/db/features/animals/animal-schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, ilike } from "drizzle-orm";
 import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
@@ -89,49 +89,6 @@ export function createAnimalRepository(database: Database) {
                     error: {
                         code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not return requested data"
-                    }
-                };
-            };
-        },
-        async searchBySubstring(keyword?: string): Promise<Result<AnimalDb[]>> {
-            try {
-                if (!keyword || keyword.trim() === "") {
-                    const result = await database.query.animals.findMany({
-                        where: { deleted: false }
-                    });
-
-                    return {
-                        success: true,
-                        data: result
-                    };
-                };
-
-                const searchTerm = `%${keyword.trim()}%`;
-
-                const result = await database.query.animals.findMany({
-                    where: {
-                        deleted: false,
-                        OR: [
-                            { name: { ilike: searchTerm } },
-                            { species: { ilike: searchTerm } },
-                            { characteristics: { ilike: searchTerm } },
-                            { nickname: { ilike: searchTerm } },
-                            { housingUnit: { ilike: searchTerm } },
-                        ]
-                    }
-                });
-
-                return {
-                    success: true,
-                    data: result
-                };
-            } catch (error) {
-                console.error(error)
-                return {
-                    success: false,
-                    error: {
-                        code: Errors.INTERNAL_SERVER_ERROR,
-                        message: "Could not complete search"
                     }
                 };
             };
@@ -258,9 +215,10 @@ export function createAnimalRepository(database: Database) {
         },
         async hardDelete(id: string): Promise<Result<null>> {
             try {
-                const result = await database
+                const result = (await database
                     .delete(animals)
-                    .where(eq(animals.id, id));
+                    .where(eq(animals.id, id))
+                    .returning())[0];
                 
                 if (!result) {
                     return {

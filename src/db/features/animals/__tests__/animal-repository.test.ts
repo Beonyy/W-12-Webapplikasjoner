@@ -5,6 +5,8 @@ import { Errors } from "@shared/types/errors";
 import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 import { createId } from "@paralleldrive/cuid2";
 import { mock } from "node:test";
+import { desc } from "drizzle-orm";
+import { error } from "node:console";
 
 describe("AnimalRepository", () => {
     let mockDb: ReturnType<typeof makeMockDatabase>;
@@ -193,6 +195,106 @@ describe("AnimalRepository", () => {
 
             const result = await repository.getAll();
 
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
+            }
+        });
+    })
+
+    describe("softDelete", () => {
+        test("should return success result with deleted animal when deleting an existing record", async () => {
+            const id = createId();
+            await seedAnimal(mockDb.db, { id: id, deleted: false });
+
+            const result = await repository.softDelete(id);
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data?.deleted).toBe(true);
+            }
+        });
+        test("should return failure result when ID does not exist", async () => {
+            const id = createId();
+            const result = await repository.softDelete(id);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.NOT_FOUND);
+            }
+        });
+        test("should return failure result when record has already been soft deleted", async () => {
+            const id = createId();
+            await seedAnimal(mockDb.db, { id: id, deleted: true });
+
+            const result = await repository.softDelete(id);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.NOT_FOUND);
+            }
+        });
+        test("should return failure result when the database is down", async () => {
+            const id = createId();
+            mockDb.close();
+
+            const result = await repository.softDelete(id);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
+            }
+        });
+    });
+    describe("hardDelete", () => {
+        test("should return success result when hard deleting an existing record", async () => {
+            const id = createId();
+            await seedAnimal(mockDb.db, { id: id });
+
+            const result = await repository.hardDelete(id);
+
+            expect(result.success).toBe(true);
+        });
+        test("should return failure result when ID does not exist", async () => {
+            const id = createId();
+            const result = await repository.hardDelete(id);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.NOT_FOUND);
+            }
+        });
+        test("should return failure result when the database is down", async () => {
+            const id = createId();
+            mockDb.close();
+
+            const result = await repository.hardDelete(id);
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
+            }
+        });
+    });
+    describe("searchByKeywords", () => {
+        test("", async () => {
+
+        });
+        test("", async () => {
+
+        });
+        test("", async () => {
+
+        });
+        test("", async () => {
+
+        });
+        test("should return failure result when the database is down", async () => {
+            const keyword = "white";
+            mockDb.close();
+
+            const result = await repository.searchByKeywords(keyword);
+            
             expect(result.success).toBe(false);
             if(!result.success) {
                 expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
