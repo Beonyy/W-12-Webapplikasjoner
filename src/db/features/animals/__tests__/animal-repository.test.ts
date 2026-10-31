@@ -7,6 +7,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { mock } from "node:test";
 import { desc } from "drizzle-orm";
 import { error } from "node:console";
+import { Species } from "../enum";
 
 describe("AnimalRepository", () => {
     let mockDb: ReturnType<typeof makeMockDatabase>;
@@ -46,7 +47,7 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const params = makeAnimalCreateParams();
             mockDb.close();
 
@@ -90,7 +91,7 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
 
@@ -136,7 +137,7 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
 
@@ -189,7 +190,7 @@ describe("AnimalRepository", () => {
                 expect(result.data[0].id).toBe(activeId);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
 
@@ -234,7 +235,7 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
 
@@ -264,7 +265,7 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
 
@@ -277,19 +278,49 @@ describe("AnimalRepository", () => {
         });
     });
     describe("searchByKeywords", () => {
-        test("", async () => {
+        test("should return matching animals when 1 keyword is provided", async () => {
+            let name = "Kitty pretty";
+            const includedAnimal = await seedAnimal(mockDb.db, { name: name, deleted: false });
+            name = "Bob's burgers";
+            await seedAnimal(mockDb.db, { name: name, deleted: false });
+            const keyword = "pretty";
+
+            const result = await repository.searchByKeywords(keyword);
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data.length).toBe(1);
+                expect(result.data[0].id).toBe(includedAnimal.id);
+            }
+        });
+        test("should return matching animals when multiple keywords are provided", async () => {
+            let name = "White cat";
+            const firstIncludedAnimal = await seedAnimal(mockDb.db, { name: name, species: Species.Cat, deleted: false });
+            name = "Miss cat";
+            const secondIncludedAnimal = await seedAnimal(mockDb.db, { name: name, species: Species.Fish, deleted: false });
+            name = "Mr. White";
+            const thirdIncludedAnimal = await seedAnimal(mockDb.db, { name: name, species: Species.Rabbit, deleted: false });
+            name = "Bob's burgers";
+            await seedAnimal(mockDb.db, { name: name, species: Species.Dog, deleted: false });
+            const keywords = "white cat";
+
+            const result = await repository.searchByKeywords(keywords);
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data.length).toBe(3);
+                expect(result.data.map(a => a.id)).toEqual(
+                    expect.arrayContaining([firstIncludedAnimal.id, secondIncludedAnimal.id, thirdIncludedAnimal.id])
+                );
+            }
+        });
+        test("should return empty array when no match is found", async () => {
 
         });
-        test("", async () => {
+        test("should exclude soft-deleted animals when records are marked as deleted", async () => {
 
         });
-        test("", async () => {
-
-        });
-        test("", async () => {
-
-        });
-        test("should return failure result when the database is down", async () => {
+        test("should return failure result when the database connection fails", async () => {
             const keyword = "white";
             mockDb.close();
 

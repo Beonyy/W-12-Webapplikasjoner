@@ -113,15 +113,15 @@ export function createAnimalRepository(database: Database) {
                 const result = await database.query.animals.findMany({
                     where: {
                         deleted: false,
-                        AND: words.map(word => {
+                        OR: words.flatMap(word => {
                             const searchTerm = `%${word}%`;
                             return {
                                 OR: [
-                                    { name: { ilike: searchTerm } },
-                                    { species: { ilike: searchTerm } },
-                                    { characteristics: { ilike: searchTerm } },
-                                    { nickname: { ilike: searchTerm } },
-                                    { housingUnit: { ilike: searchTerm } },
+                                    { name: { like: searchTerm } },
+                                    { species: { like: searchTerm } },
+                                    { characteristics: { like: searchTerm } },
+                                    { nickname: { like: searchTerm } },
+                                    { housingUnit: { like: searchTerm } },
                                 ]
                             };
                         })
