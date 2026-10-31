@@ -315,10 +315,26 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return empty array when no match is found", async () => {
+            const keyword = "AnimalWhichDoesNotExist";
+            
+            const result = await repository.searchByKeywords(keyword);
 
+            expect(result.success).toBe(true);
+            if (result.success) {
+                expect(result.data.length).toBe(0);
+            }
         });
         test("should exclude soft-deleted animals when records are marked as deleted", async () => {
+            const name = "Deleted animal";
+            await seedAnimal(mockDb.db, { name: name, species: Species.Cat, deleted: true });
+            const keywords = "animal";
 
+            const result = await repository.searchByKeywords(keywords);
+
+            expect(result.success).toBe(true);
+            if(result.success) {
+                expect(result.data.length).toBe(0);
+            }
         });
         test("should return failure result when the database connection fails", async () => {
             const keyword = "white";
