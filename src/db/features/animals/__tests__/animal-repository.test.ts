@@ -1,13 +1,11 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import { makeMockDatabase, makeAnimalCreateParams, makeAnimalDb, seedAnimal } from "./helpers";
+import { makeMockDatabase, makeAnimalCreateParams, seedAnimal } from "./helpers";
 import { createAnimalRepository } from "../animal-repository";
 import { Errors } from "@shared/types/errors";
-import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 import { createId } from "@paralleldrive/cuid2";
-import { mock } from "node:test";
-import { desc } from "drizzle-orm";
-import { error } from "node:console";
 import { Species } from "../enum";
+import { animals } from "@/db/features/animals/animal-schema";
+import { eq } from "drizzle-orm";
 
 describe("AnimalRepository", () => {
     let mockDb: ReturnType<typeof makeMockDatabase>;
@@ -137,6 +135,15 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
+        test("should return failure result when the update payload is empty", async () => {
+            const id = createId();
+            const result = await repository.updateById(id, {});
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.BAD_REQUEST);
+            }
+        });
         test("should return failure result when the database connection fails", async () => {
             const id = createId();
             mockDb.close();
@@ -179,8 +186,8 @@ describe("AnimalRepository", () => {
         test("should return only non-deleted records when both soft deleted and non-deleted exist", async () => {
             const activeId = createId();
             const deletedId = createId();
-            seedAnimal(mockDb.db, { id: activeId, deleted: false });
-            seedAnimal(mockDb.db, { id: deletedId, deleted: true });
+            await seedAnimal(mockDb.db, { id: activeId, deleted: false });
+            await seedAnimal(mockDb.db, { id: deletedId, deleted: true });
 
             const result = await repository.getAll();
 
@@ -255,6 +262,11 @@ describe("AnimalRepository", () => {
             const result = await repository.hardDelete(id);
 
             expect(result.success).toBe(true);
+            const deletedRecord = await mockDb.db
+                .select()
+                .from(animals)
+                .where(eq(animals.id, id));
+            expect(deletedRecord).toHaveLength(0);
         });
         test("should return failure result when ID does not exist", async () => {
             const id = createId();

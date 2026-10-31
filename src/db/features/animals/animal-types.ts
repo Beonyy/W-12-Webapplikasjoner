@@ -10,5 +10,4 @@ import { animals } from "@/db/features/animals/animal-schema";
 //     contactInfo: string | null;
 //     profileImageUrl: string | null;
 // }
-export type AnimalDb = typeof animals.$inferInsert
-export type AnimalDbInsert = Omit<AnimalDb, 'id' | 'createdAt' | 'updatedAt' | 'deleted'>;
+export type AnimalDb = typeof animals.$inferSelect

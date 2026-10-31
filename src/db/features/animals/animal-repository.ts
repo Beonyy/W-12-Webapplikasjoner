@@ -1,5 +1,5 @@
 import { animals } from "@/db/features/animals/animal-schema";
-import { eq, and, or, ilike } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { Database, drizzleDatabaseClient } from "@/db";
 import { Result } from "@shared/types/result";
 import { Errors } from "@shared/types/errors";
@@ -11,12 +11,12 @@ export interface AnimalRepository {
     getById(id: string):Promise<Result<AnimalDb>>;
     updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
-    getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
     hardDelete(id: string): Promise<Result<null>> ;
+    searchByKeywords(keyword?: string): Promise<Result<AnimalDb[]>>;
 }
 
-export function createAnimalRepository(database: Database) {
+export function createAnimalRepository(database: Database): AnimalRepository {
     return {
         async insert(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
             try {
@@ -146,6 +146,17 @@ export function createAnimalRepository(database: Database) {
         },
         async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
+                // avoids unecessary db-calls that don't change anything
+                if (Object.keys(data).length === 0) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.BAD_REQUEST,
+                            message: "Update payload cannot be empty"
+                        }
+                    }
+                }
+
                 const result = await database
                     .update(animals)
                     .set(data)

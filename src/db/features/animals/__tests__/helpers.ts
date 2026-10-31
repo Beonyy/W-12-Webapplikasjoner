@@ -55,7 +55,8 @@ export async function seedAnimal(db: AppDatabase, overrides: Partial<AnimalDb> =
         VALUES (${id}, ${animal.name}, ${animal.species}, ${animal.nickname}, 
         ${animal.dateOfBirth}, ${animal.characteristics}, ${animal.housingUnit}, 
         ${animal.contactInfo}, ${animal.profileImageUrl}, ${animal.deleted ? 1 : 0}, 
-        ${animal.createdAt?.getTime() ?? Date.now()}, ${animal.updatedAt ? animal.updatedAt.getTime() : null})
+        ${Math.floor((animal.createdAt?.getTime() ?? Date.now()) / 1000)}, 
+        ${animal.updatedAt ? Math.floor(animal.updatedAt.getTime() / 1000) : null})
     `);
     return animal;
 }
