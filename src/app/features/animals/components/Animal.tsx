@@ -10,7 +10,7 @@ export type Animal = {
   id?: string;     
   name: string;
   nickname: string;
-  dateOfBirth: string;      // Konverteres til alder
+  dateOfBirth: Date;      // Konverteres til alder
   species: Species;          
   characteristics: string;  // senere endres til string[]?
   owner: string;            // skal hentes fra BoenhetId

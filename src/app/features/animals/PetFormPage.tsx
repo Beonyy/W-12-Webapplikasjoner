@@ -1,57 +1,56 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import PetRegistration from "./components/PetRegistrationForm";
-import type { Animal as UiAnimal} from './components/Animal';
-import { animalApi} from './animal-api'
-import type {Animal as BackendAnimal } from './animal-types'
-
+import type { Animal as UiAnimal } from "./components/Animal";
+import { animalApi } from "./animal-api";
+import type { Animal as BackendAnimal, AnimalCreateParams } from "./animal-types";
 
 function calculateAge(dateOfBirth: string) {
   const birthDate = new Date(dateOfBirth);
   const today = new Date();
-
-  let age = today.getFullYear() - birthDate.getFullYear();
-
+  const age = today.getFullYear() - birthDate.getFullYear();
   return age;
 }
 
 // Backend -> UI
 function mapBackendToUi(animal: BackendAnimal): UiAnimal {
+  const dobString =
+    animal.dateOfBirth instanceof Date
+      ? animal.dateOfBirth.toISOString().slice(0, 10)
+      : String(animal.dateOfBirth);
+
   return {
-    id: undefined, // backend Animal har ikke id i typen ennå
+    id: undefined,
     name: animal.name,
     nickname: animal.nickname,
-    dateOfBirth: animal.dateOfBirth,
-    species: animal.kind as UiAnimal["species"], // kind er string, cast til Species
-    characteristics: animal.traits,
-    owner: animal.housingUnit, // bruker housingUnit som "owner"
-    address: "",               // backend har ikke adresse
+    dateOfBirth: dobString,
+    species: animal.species as UiAnimal["species"],
+    characteristics: animal.characteristics.join(", "),
+    owner: animal.housingUnit,
+    address: "",
     contactInfo: animal.contactInfo,
   };
 }
 
-// UI -> Backend
-function mapUiToBackend(animal: UiAnimal): BackendAnimal {
+// UI -> Backend (for create)
+function mapUiToBackend(animal: UiAnimal): AnimalCreateParams {
   return {
     name: animal.name,
-    kind: animal.species,          // Species (string-union) -> string
+    species: animal.species,
     nickname: animal.nickname,
     dateOfBirth: animal.dateOfBirth,
-    traits: animal.characteristics,
-    housingUnit: animal.owner,     // legger owner inn som housingUnit
+    characteristics: animal.characteristics,
+    housingUnit: animal.owner,
     contactInfo: animal.contactInfo,
-    bilder: [],                    // tom foreløpig
   };
 }
 
 export default function PetFormPage() {
- // State for alle registrerte dyr.
   const [animals, setAnimals] = useState<UiAnimal[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Hent eksisterende dyr fra API når siden laster
   useEffect(() => {
     async function loadAnimals() {
       setLoading(true);
@@ -65,7 +64,7 @@ export default function PetFormPage() {
         return;
       }
 
-      const backendAnimals = result.data ?? [];
+      const backendAnimals = (result.data ?? []) as BackendAnimal[];
       setAnimals(backendAnimals.map(mapBackendToUi));
       setLoading(false);
     }
@@ -73,25 +72,24 @@ export default function PetFormPage() {
     loadAnimals();
   }, []);
 
-  // Funksjonen som sendes til PetRegistration
   async function handleRegister(uiAnimal: UiAnimal) {
     setError(null);
 
-    const backendAnimal = mapUiToBackend(uiAnimal);
-    const result = await animalApi.create(backendAnimal);
+    const createParams = mapUiToBackend(uiAnimal);
+    const result = await animalApi.create(createParams);
 
     if (!result.success) {
       setError("Kunne ikke registrere dyr i API-et.");
       return;
     }
 
-    // Hvis API-et returnerer det opprettede dyret, bruk det.
-    const createdBackend =
-      (result.data as BackendAnimal | undefined) ?? backendAnimal;
-
-    setAnimals((prev) => [...prev, mapBackendToUi(createdBackend)]);
+    // Inntil create begynner å returnere Animal, bruker vi UI-objektet lokalt
+    setAnimals((prev) => [...prev, uiAnimal]);
     console.log("Registrert nytt dyr:", uiAnimal);
+
+    return result;
   }
+
   return (
     <>
       <PetRegistration onRegister={handleRegister} />
@@ -102,16 +100,23 @@ export default function PetFormPage() {
       <h2>Registrerte dyr</h2>
       <ul>
         {animals.map((animal, index) => (
-          // key bør egentlig være en unik ID, jaja for nå
           <li key={index}>
-            Navn: {animal.name} <br/>
-            Kallenavn: {animal.nickname}<br/>
-            Type dyr: {animal.species}<br/>
-            Kjennetrekk: {animal.characteristics}<br/>
-            Alder: {calculateAge(animal.dateOfBirth)} år<br/>
-            Eier: {animal.owner}<br/>
-            Adresse: {animal.address}<br/>
-            Kontaktinfo: {animal.contactInfo}<br/><br/>
+            Navn: {animal.name} <br />
+            Kallenavn: {animal.nickname}
+            <br />
+            Type dyr: {animal.species}
+            <br />
+            Kjennetrekk: {animal.characteristics}
+            <br />
+            Alder: {calculateAge(animal.dateOfBirth)} år
+            <br />
+            Eier: {animal.owner}
+            <br />
+            Adresse: {animal.address}
+            <br />
+            Kontaktinfo: {animal.contactInfo}
+            <br />
+            <br />
           </li>
         ))}
       </ul>
