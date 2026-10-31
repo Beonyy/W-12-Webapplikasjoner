@@ -2,16 +2,7 @@ import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { makeMockDatabase, makeAnimalCreateParams, makeAnimalDb } from "./helpers";
 import { createAnimalRepository } from "../animal-repository";
 import { Errors } from "@shared/types/errors";
-//import * from ;
-/*
-afterEach(async () => {
-    await clientDatabase.delete(animals);
-});
-
-afterAll(() => {
-    closeTestDatabase();
-})
-*/
+import { AnimalCreateParams } from "@/app/features/animals/animal-types";
 
 describe("AnimalRepository", () => {
     let mockDb: ReturnType<typeof makeMockDatabase>;
@@ -42,7 +33,7 @@ describe("AnimalRepository", () => {
         });
 
         test("should return failure result when inserting invalid data", async () => {
-            const params = makeAnimalCreateParams({ name: null });
+            const params = makeAnimalCreateParams({ name: undefined });
 
             const result = await repository.insert(params);
 
@@ -67,10 +58,13 @@ describe("AnimalRepository", () => {
         test("should return success with inserted animal when id exists", async () => {
             const id = "101";
             const name = "Queen of England";
-            const params = makeAnimalDb({ id: id, name: name });
-            await repository.insert(params);
+            const params = makeAnimalCreateParams({ name: name });
+            const inserted = await repository.insert(params);
+            let result;
 
-            const result = await repository.getById(id);
+            if(inserted.success) {
+                result = await repository.getById(inserted.data.id);
+            }
 
             expect(result.success).toBe(true);
             if(result.success) {
@@ -80,7 +74,7 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return failure result when ID does not exist", async () => {
-            const result = await repository.getById(100);
+            const result = await repository.getById("100");
 
             expect(result.success).toBe(false);
             if(!result.success) {
@@ -129,7 +123,7 @@ describe("AnimalRepository", () => {
             }
         });
         test("should return failure result when ID does not exist", async () => {
-            const result = await repository.updateById(100);
+            const result = await repository.updateById("100");
 
             expect(result.success).toBe(false);
             if(!result.success) {
