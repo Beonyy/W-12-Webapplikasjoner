@@ -2,14 +2,17 @@
 
 
 import { PetSearch } from "./components/PetSearch"
+import { AuthLayout } from "@/app/auth/AuthLayout";
 
 export default function PetSearchPage() {
   return (
-    <main>
-      
-      <h1>Dyreprofiler</h1>
-      <p>Her ser du alle registrerte dyr i systemet.</p>
-      <PetSearch />
-    </main>
+    <AuthLayout>
+      <main>
+        
+        <h1>Dyreprofiler</h1>
+        <p>Her ser du alle registrerte dyr i systemet.</p>
+        <PetSearch />
+      </main>
+    </AuthLayout>
   );
 }

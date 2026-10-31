@@ -11,7 +11,7 @@ type PetRegistrationProps = {
 };
 
 
-const TEMP_AUTH = "user"
+// const TEMP_AUTH = "user"
 
 export default function PetRegistration ({ onRegister }: Readonly<PetRegistrationProps>) {
 
