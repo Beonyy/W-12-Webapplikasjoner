@@ -216,7 +216,7 @@ export function createAnimalRepository(database: Database) {
                 return {
                     success: false,
                     error: {
-                        code: Errors.NOT_FOUND,
+                        code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not update requested resource"
                     }
                 };

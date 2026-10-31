@@ -111,7 +111,7 @@ describe("AnimalRepository", () => {
 
             expect(result.success).toBe(true);
             if(result.success) {
-                expect(result.data.nickname).toBe(newName)
+                expect(result.data.name).toBe(newName)
             }
         });
         test("should return failure result when ID does not exist", async () => {
@@ -122,11 +122,28 @@ describe("AnimalRepository", () => {
                 expect(result.error.code).toBe(Errors.NOT_FOUND);
             }
         });
-        test("updates soft deleted record?", async () => {
+        test("should return failure result when updating a soft-deleted record", async () => {
+            const id = createId();
+            const newName = "New name"
+            await seedAnimal(mockDb.db, { id: id, deleted: true });
 
+            const result = await repository.updateById(id, { name: newName });
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.NOT_FOUND);
+            }
         });
-        test("db is down", async () => {
+        test("should return failure result when the database is down", async () => {
+            const id = createId();
+            mockDb.close();
 
+            const result = await repository.updateById(id, { name: "New name" });
+
+            expect(result.success).toBe(false);
+            if(!result.success) {
+                expect(result.error.code).toBe(Errors.INTERNAL_SERVER_ERROR);
+            }
         });
     });
     describe("getAll", () => {
@@ -170,7 +187,8 @@ describe("AnimalRepository", () => {
                 expect(result.data[0].id).toBe(activeId);
             }
         });
-        test("when database is down", async () => {
+        test("should return failure result when the database is down", async () => {
+            const id = createId();
             mockDb.close();
 
             const result = await repository.getAll();
