@@ -188,12 +188,9 @@ export function createAnimalRepository(database: Database) {
         },
         async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
-                //Maintaining DB integrity by disallowing updates to the id field
-                const { id: _, ...sanitizedData } = data;
-
                 const result = await database
                     .update(animals)
-                    .set(sanitizedData)
+                    .set(data)
                     .where(and(
                         eq(animals.id, id),
                         eq(animals.deleted, false)))
@@ -233,7 +230,7 @@ export function createAnimalRepository(database: Database) {
                         eq(animals.deleted, false)))
                     .returning())[0]
             
-                if (!result[0]) {
+                if (!result) {
                     return {
                         success: false,
                         error: {
@@ -260,11 +257,11 @@ export function createAnimalRepository(database: Database) {
         },
         async hardDelete(id: string): Promise<Result<null>> {
             try {
-                await database
+                const result = await database
                     .delete(animals)
                     .where(eq(animals.id, id));
                 
-                if (!result[0]) {
+                if (!result) {
                     return {
                         success: false,
                         error: {

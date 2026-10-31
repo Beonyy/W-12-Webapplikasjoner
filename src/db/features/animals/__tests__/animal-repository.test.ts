@@ -57,13 +57,14 @@ describe("AnimalRepository", () => {
     describe("getById", () => {
         test("should return success with inserted animal when id exists", async () => {
             const id = "101";
-            const name = "Queen of England";
-            const params = makeAnimalCreateParams({ name: name });
+            const params: AnimalCreateParams = { name: "Queen"}
+            
+            const params = makeAnimalCreateParams();
             const inserted = await repository.insert(params);
-            let result;
+            if (!inserted)
 
             if(inserted.success) {
-                result = await repository.getById(inserted.data.id);
+                result = await repository.getById(inserted.data!.id);
             }
 
             expect(result.success).toBe(true);
