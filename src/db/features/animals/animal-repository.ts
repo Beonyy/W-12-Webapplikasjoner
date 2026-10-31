@@ -11,6 +11,7 @@ export interface AnimalRepository {
     getById(id: string):Promise<Result<AnimalDb>>;
     updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>>;
     getAll():Promise<Result<AnimalDb[]>>;
+    getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
     hardDelete(id: string): Promise<Result<null>> ;
 }
