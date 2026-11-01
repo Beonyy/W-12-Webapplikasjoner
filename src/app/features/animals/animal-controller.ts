@@ -8,6 +8,7 @@
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
 import { isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
+import { string } from "zod";
 
 
 export function parseParams(request:Request){
@@ -73,8 +74,21 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { error:'not authorized'},
                     { status: 403},)
             }
+            let data : unknown 
+            try{
+                data = await request.json();
+            } catch{
+                return Response.json(
+                    { error:' Invalid JSON body'},
+                    { status: 400},
+                )
+            }
+            
 
-            return Response.json(await service.list(auth));
+            return Response.json(await service.list(
+                auth,
+                typeof data === "string" ? data: undefined
+            ));
         },
         
         async get({request}:RequestInfo){

@@ -9,7 +9,7 @@ import { Animal, AnimalCreateParams, isAnimal, isAnimalArray } from "./animal-ty
 import { isResult, Result } from "@/shared/types/result";
 
 export interface AnimalApi{
-    list(sessionToken:string): Promise<Result<Animal[]>>;
+    list(sessionToken:string, keywords?:string): Promise<Result<Animal[]>>;
     get(sessionToken:string, id:string): Promise<Result<Animal>>;
     create(sessionToken:string, animalCreateParams: AnimalCreateParams): Promise<Result<Animal>>;
     update(sessionToken:string, id:string, animal:Animal): Promise<Result<Animal>>;
@@ -24,13 +24,14 @@ export interface AnimalApi{
 
 export function createAnimalApi(): AnimalApi{
     return {
-        async list(sessionToken:string): Promise<Result<Animal[]>>{
+        async list(sessionToken:string, keywords?:string): Promise<Result<Animal[]>>{
             const response = await fetch(`/api/animals`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `${sessionToken}`
-                }
+                },
+                body: JSON.stringify(keywords)
             })
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:`Request failed with status ${response.status}`}};
