@@ -11,7 +11,7 @@ type PetRegistrationProps = {
 };
 
 
-const TEMP_AUTH = "user"
+// const TEMP_AUTH = "user"
 
 export default function PetRegistration ({ onRegister }: Readonly<PetRegistrationProps>) {
 
@@ -47,61 +47,61 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     return (
         <section>
             <form onSubmit={handleSubmit}>
-                <label>Navn på kjæledyret:</label>
-                <input 
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-
-                <label>Kallenavn:</label>
-                <input
-                    type="text"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                />
-
-                <label>Fødselsdato:</label>
-                <input 
-                    type="date"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                />
-
-                <label>Type dyr: </label>
-                <select
-                    value={species}
-                    onChange={(e) => setSpecies(e.target.value as Species)}
-                >
-                    <option value="Dog">Hund</option>
-                    <option value="Cat">Katt</option>
-                    <option value="Bird">Fugl</option>
-                    <option value="Rabbit">Kanin</option>
-                    <option value="Reptile">Reptil</option>
-                    <option value="Fish">Fisk</option>
-                </select>
-
-                <label>Kjennetrekk: </label>
-                <input 
-                    type="text"
-                    value={characteristics}
-                    onChange={(e) => setCharacteristics(e.target.value)}
-                />
-
-                <label>Boenhet: </label>
-                <input 
-                    type="text"
-                    value={housingUnit}
-                    onChange={(e) => setHousingUnit(e.target.value)}
-                />
-
-                <label>Kontaktinformasjon: </label>
-                <input
-                    type="text"
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
-                />      
-
+                <label>Navn på kjæledyret:
+                    <input 
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </label>
+                <label>Kallenavn:
+                    <input
+                        type="text"
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                    />
+                </label>
+                <label>Fødselsdato:
+                    <input 
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={(e) => setDateOfBirth(e.target.value)}
+                    />
+                </label>
+                <label>Type dyr: 
+                    <select
+                        value={species}
+                        onChange={(e) => setSpecies(e.target.value as Species)}
+                    >
+                        <option value="Dog">Hund</option>
+                        <option value="Cat">Katt</option>
+                        <option value="Bird">Fugl</option>
+                        <option value="Rabbit">Kanin</option>
+                        <option value="Reptile">Reptil</option>
+                        <option value="Fish">Fisk</option>
+                    </select>
+                </label>
+                <label>Kjennetrekk: 
+                    <input 
+                        type="text"
+                        value={characteristics}
+                        onChange={(e) => setCharacteristics(e.target.value)}
+                    />
+                </label>
+                <label>Boenhet: 
+                    <input 
+                        type="text"
+                        value={housingUnit}
+                        onChange={(e) => setHousingUnit(e.target.value)}
+                    />
+                </label>
+                <label>Kontaktinformasjon: 
+                    <input
+                        type="text"
+                        value={contactInfo}
+                        onChange={(e) => setContactInfo(e.target.value)}
+                    />      
+                </label>
                 <input type="submit" value="Register" />    
             </form>
         </section>

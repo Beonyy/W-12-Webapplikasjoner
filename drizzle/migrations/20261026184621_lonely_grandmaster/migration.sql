@@ -18,5 +18,5 @@ CREATE TABLE `animals` (
 	`profileImageUrl` text,
 	`deleted` integer DEFAULT false NOT NULL,
 	`created_at` integer NOT NULL,
-	`updated_at` integer
+	`updated_at` integer    
 );

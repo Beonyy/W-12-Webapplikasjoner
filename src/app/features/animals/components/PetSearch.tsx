@@ -5,8 +5,9 @@ import { animalApi } from "../animal-api";
 import AnimalProfil from "./AnimalProfil";
 import type { Animal } from "../animal-types";
 import { Filtering } from "./Filtering";
+import { useRole } from "@/app/auth/RoleContext";
 
-const TEMP_AUTH = "user"
+// const TEMP_AUTH = "user"
 
 function animalMatchesWords(animal: Animal, words: string[]): boolean {
   if (words.length === 0) {
@@ -36,12 +37,15 @@ export function PetSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { role } = useRole(); // <- "none" | "user" | "admin"
+
   useEffect(() => {
     async function loadAnimals() {
       setLoading(true);
       setError(null);
 
-      const result = await animalApi.list(TEMP_AUTH);
+      // const result = await animalApi.list(TEMP_AUTH);
+      const result = await animalApi.list(role);
 
       if (!result.success) {
         setError("Noe gikk galt, kunne ikke liste opp dyr");
@@ -57,7 +61,7 @@ export function PetSearch() {
     }
 
     loadAnimals();
-  }, []);
+  }, [role]);
 
   function handleFilterChange(_rawText: string, words: string[]) {
     // Hvis ingen ord -> vis alle
