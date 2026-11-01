@@ -14,6 +14,13 @@ export const Errors = {
 
 export type ErrorCode = keyof typeof Errors;
 
+
+const errorCodes = new Set<string>(Object.keys(Errors));
+
+export function isErrorCode(value: unknown): value is ErrorCode {
+  return typeof value === "string" && errorCodes.has(value);
+}
+
 // Base error structure
 type Error = {
   code: ErrorCode;
@@ -24,3 +31,22 @@ export type ResultError = {
   success: false;
   error: Error;
 };
+
+export function isResultError(value: unknown): value is ResultError {
+  if (!isRecord(value) || value.success !== false) {
+    return false;
+  }
+
+  const error = value.error;
+
+  return (
+    isRecord(error) &&
+    isErrorCode(error.code) &&
+    typeof error.message === "string"
+  );
+}
+
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}

@@ -4,17 +4,19 @@ export type Animal = {
     name : string;
     species: string;
     nickname: string;
-    dateOfBirth : Date;
-    characteristics: string[];
+    dateOfBirth : string;
+    characteristics: string;
     housingUnit : string;
     contactInfo: string;
     profileImageUrl: string,
-    images: AnimalImage[];
+    // images: AnimalImage[];
     // more here, maybe
 }
 
 export function isAnimal(value: unknown): value is Animal{
     if (typeof value !== 'object' || value === null ){
+        console.log("false")
+        console.log("false")
         return false;
     }
     
@@ -30,6 +32,10 @@ export function isAnimal(value: unknown): value is Animal{
         typeof animal.profileImageUrl == "string" &&
         typeof animal.contactInfo == "string"
     );
+}
+
+export function isAnimalArray(value: unknown): value is Animal[] {
+  return Array.isArray(value) && value.every(isAnimal);
 }
 
 export interface AnimalCreateParams{

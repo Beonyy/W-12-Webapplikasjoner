@@ -10,19 +10,17 @@ import { Animal, AnimalCreateParams } from "./animal-types";
 import { toAnimal } from "./animal-mappers";
 
 export interface AnimalService {
-    list(userId: string): Promise<Result<Animal[]>>;
-    get(userId: string, id: string): Promise<Result<Animal>>;
-    create(userId: string, input: AnimalCreateParams): Promise<Result<Animal>>;
-    update(userId: string, id: string, input: Partial<AnimalCreateParams>): Promise<Result<Animal>>;
-    remove(userId: string, id: string): Promise<Result<null>>;
+    list(sessionToken: string): Promise<Result<Animal[]>>;
+    get(sessionToken: string, id: string): Promise<Result<Animal>>;
+    create(sessionToken: string, input: AnimalCreateParams): Promise<Result<Animal>>;
+    update(sessionToken: string, id: string, input: any): Promise<Result<Animal>>;
+    remove(sessionToken: string, id: string): Promise<Result<null>>;
 }
-
 
 //TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
-        async list(userId: string)
-        {
+        async list(sessionToken: string){
             //TODO: validation
             //TODO: more internal logic ?
             const result = await repository.getAll();
@@ -30,11 +28,10 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: result.data.map(animalDb => toAnimal(animalDb, []))
+                data: result.data.map(animalDb => toAnimal(animalDb))
             };
         },
-        async get(userId: string, id: string)
-        {
+        async get(sessionToken: string, id: string){
             //TODO: validation
             //TODO: more internal logic ?
             const result =  await repository.getById(id);
@@ -42,10 +39,10 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             };
         },
-        async create(userID: string, input: AnimalCreateParams){
+        async create(sessionToken: string, input: AnimalCreateParams){
             //TODO: validation
             //TODO: more internal logic ?
             const result = await repository.insert(input);
@@ -53,10 +50,10 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             }
         },
-        async update(userId: string, id: string, input: Partial<AnimalCreateParams>){
+        async update(sessionToken: string, id: string, input: any){
             //TODO: validation
             //TODO: internal logic
             const result = await repository.updateById(id, input);
@@ -64,10 +61,10 @@ export function createAnimalService(repository: AnimalRepository): AnimalService
 
             return {
                 success: true,
-                data: toAnimal(result.data, [])
+                data: toAnimal(result.data)
             };
         },
-        async remove(userId: string, id: string){
+        async remove(sessionToken: string, id: string){
             //TODO: validation
             //TODO: internal logic
             const result = await repository.softDelete(id);

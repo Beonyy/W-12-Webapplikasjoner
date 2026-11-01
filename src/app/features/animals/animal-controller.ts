@@ -5,17 +5,54 @@
 // Her sender vi en Response tilbake med et gitt format {ok: true, data: }
 // eller {ok: false: error: {}}
 
-import { Result } from "@/shared/types/result";
-import { ErrorCode } from "@/shared/types/errors";
-import { DefaultAppContext } from "rwsdk/worker";
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
-import { isAnimal, isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
+import { isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
 
 
 export function parseParams(request:Request){
     return Object.fromEntries(new URL(request.url).searchParams);
 }
+
+// NOTE: should be moved somewhere else! This is only a temporary home
+// NOTE: auth types should obviously be something else in prod.
+export function isActionAuthorized( action : string, auth: string):boolean{
+    switch (action){
+        case "list":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "get":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "create":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return false;
+            break;
+        case "update":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        case "remove":
+            if (auth === "none") return false;
+            if (auth === "user") return true;
+            if (auth === "admin") return true;
+            break;
+        default:
+            return false;
+    }
+    return false;
+}
+
+
+
+
+
 
 export interface AnimalController {
     list(request : RequestInfo): Promise<Response>;
@@ -30,17 +67,25 @@ export function createAnimalController(service: AnimalService): AnimalController
     return {
         async list({request}:RequestInfo){
 
-            //TODO:for later.
-            //request.headers.get("Authorization")
+            const auth = request.headers.get("Authorization")
+            if (!auth || !isActionAuthorized("list", auth)){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
 
-            const userId = ""
-            return Response.json(await service.list(userId));
+            return Response.json(await service.list(auth));
         },
         
         async get({request}:RequestInfo){
+            const auth = request.headers.get("Authorization")
+            if (!auth || !isActionAuthorized("get", auth)){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
             const params = parseParams(request)
             const {id} = params;
-            const userId = ""
             
             // TODO: validate id
             if (!id || typeof id !== "string"){
@@ -50,12 +95,18 @@ export function createAnimalController(service: AnimalService): AnimalController
                 );
             }
             
-            return Response.json(await service.get(userId, id));
+            return Response.json(await service.get(auth, id));
         },
 
         
         async create({request}:RequestInfo){
-            const userId = ""
+            const auth = request.headers.get("Authorization")
+            if (!auth || !isActionAuthorized("create", auth)){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
+
             let data : unknown 
             try{
                 data = await request.json();
@@ -72,11 +123,17 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { status: 400},
                 )
             }
-            return Response.json(await service.create(userId, data))
+            return Response.json(await service.create(auth, data))
         },
         
         async update({request}:RequestInfo)  {
-            const userId = "";
+            const auth = request.headers.get("Authorization")
+            if (!auth || !isActionAuthorized("update", auth)){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
+
             const params = parseParams(request);
             const {id} = params;
             let data : unknown 
@@ -94,18 +151,29 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { status: 400},
                 )
             }
-            return Response.json(await service.update(userId, id, data))
+            return Response.json(await service.update(auth, id, data))
         },
         
-        async action({request})  {
-            const userId = "";
+        async action({request} : RequestInfo)  {
+            // TODO: no actions currently, so....
+            // const auth = request.headers.get("Authorization")
+            // if (!auth || !isActionAuthorized("action", auth)){
+            //     return Response.json(
+            //         { error:'not authorized'},
+            //         { status: 403},)
+            // }
             return Response.json(
                 {error:' Invalid request body'},
                 { status: 400},)
             },
 
         async remove({request}:RequestInfo)  {
-            const userId = "";
+            const auth = request.headers.get("Authorization")
+            if (!auth || !isActionAuthorized("remove", auth)){
+                return Response.json(
+                    { error:'not authorized'},
+                    { status: 403},)
+            }
             const params = parseParams(request);
             const {id} = params;
             // TODO: validate id
@@ -115,7 +183,7 @@ export function createAnimalController(service: AnimalService): AnimalController
                     {status: 400},
                 );
             }
-            return Response.json(await service.remove(userId, id));
+            return Response.json(await service.remove(auth, id));
         },
     };
 }
