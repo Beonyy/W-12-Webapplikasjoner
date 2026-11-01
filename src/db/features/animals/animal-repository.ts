@@ -13,9 +13,10 @@ export interface AnimalRepository {
     getAll():Promise<Result<AnimalDb[]>>;
     softDelete(id: string): Promise<Result<AnimalDb | null>>;
     hardDelete(id: string): Promise<Result<null>> ;
+    searchByKeywords(keyword?: string): Promise<Result<AnimalDb[]>>;
 }
 
-export function createAnimalRepository(database: Database) {
+export function createAnimalRepository(database: Database): AnimalRepository {
     return {
         async insert(data: AnimalCreateParams): Promise<Result<AnimalDb>> {
             try {
@@ -92,49 +93,6 @@ export function createAnimalRepository(database: Database) {
                 };
             };
         },
-        async searchBySubstring(keyword?: string): Promise<Result<AnimalDb[]>> {
-            try {
-                if (!keyword || keyword.trim() === "") {
-                    const result = await database.query.animals.findMany({
-                        where: { deleted: false }
-                    });
-
-                    return {
-                        success: true,
-                        data: result
-                    };
-                };
-
-                const searchTerm = `%${keyword.trim()}%`;
-
-                const result = await database.query.animals.findMany({
-                    where: {
-                        deleted: false,
-                        OR: [
-                            { name: { ilike: searchTerm } },
-                            { species: { ilike: searchTerm } },
-                            { characteristics: { ilike: searchTerm } },
-                            { nickname: { ilike: searchTerm } },
-                            { housingUnit: { ilike: searchTerm } },
-                        ]
-                    }
-                });
-
-                return {
-                    success: true,
-                    data: result
-                };
-            } catch (error) {
-                console.error(error)
-                return {
-                    success: false,
-                    error: {
-                        code: Errors.INTERNAL_SERVER_ERROR,
-                        message: "Could not complete search"
-                    }
-                };
-            };
-        },
         async searchByKeywords(keyword?: string): Promise<Result<AnimalDb[]>> {
             try {
                 if (!keyword || keyword.trim() === "") {
@@ -155,15 +113,15 @@ export function createAnimalRepository(database: Database) {
                 const result = await database.query.animals.findMany({
                     where: {
                         deleted: false,
-                        AND: words.map(word => {
+                        OR: words.flatMap(word => {
                             const searchTerm = `%${word}%`;
                             return {
                                 OR: [
-                                    { name: { ilike: searchTerm } },
-                                    { species: { ilike: searchTerm } },
-                                    { characteristics: { ilike: searchTerm } },
-                                    { nickname: { ilike: searchTerm } },
-                                    { housingUnit: { ilike: searchTerm } },
+                                    { name: { like: searchTerm } },
+                                    { species: { like: searchTerm } },
+                                    { characteristics: { like: searchTerm } },
+                                    { nickname: { like: searchTerm } },
+                                    { housingUnit: { like: searchTerm } },
                                 ]
                             };
                         })
@@ -188,6 +146,17 @@ export function createAnimalRepository(database: Database) {
         },
         async updateById(id: string, data: Partial<AnimalCreateParams>):Promise<Result<AnimalDb>> {
             try {
+                // avoids unecessary db-calls that don't change anything
+                if (Object.keys(data).length === 0) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.BAD_REQUEST,
+                            message: "Update payload cannot be empty"
+                        }
+                    }
+                }
+
                 const result = await database
                     .update(animals)
                     .set(data)
@@ -215,7 +184,7 @@ export function createAnimalRepository(database: Database) {
                 return {
                     success: false,
                     error: {
-                        code: Errors.NOT_FOUND,
+                        code: Errors.INTERNAL_SERVER_ERROR,
                         message: "Could not update requested resource"
                     }
                 };
@@ -225,8 +194,20 @@ export function createAnimalRepository(database: Database) {
             try {
                 const result = (await database.update(animals)
                     .set({ deleted: true })
-                    .where(eq(animals.id, id))
+                    .where(and(
+                        eq(animals.id, id),
+                        eq(animals.deleted, false)))
                     .returning())[0]
+            
+                if (!result) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
 
                 return {
                     success: true,
@@ -245,9 +226,20 @@ export function createAnimalRepository(database: Database) {
         },
         async hardDelete(id: string): Promise<Result<null>> {
             try {
-                await database
+                const result = (await database
                     .delete(animals)
-                    .where(eq(animals.id, id));
+                    .where(eq(animals.id, id))
+                    .returning())[0];
+                
+                if (!result) {
+                    return {
+                        success: false,
+                        error: {
+                            code: Errors.NOT_FOUND,
+                            message: "Animal not found"
+                        }
+                    }
+                }
 
                 return {
                     success: true,
