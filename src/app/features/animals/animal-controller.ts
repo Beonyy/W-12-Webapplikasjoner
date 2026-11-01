@@ -8,7 +8,6 @@
 import { RequestInfo } from "rwsdk/worker";
 import { animalService, AnimalService } from "./animal-services";
 import { isAnimalCreationParams, isAnimalUpdateParams } from "./animal-types";
-import { string } from "zod";
 
 
 export function parseParams(request:Request){
