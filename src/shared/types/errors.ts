@@ -32,6 +32,16 @@ export type ResultError = {
   error: Error;
 };
 
+export function makeError(code: ErrorCode, message: string):ResultError{
+  return {
+    success: false,
+    error: {
+      code,
+      message
+    }
+  }
+}
+
 export function isResultError(value: unknown): value is ResultError {
   if (!isRecord(value) || value.success !== false) {
     return false;
@@ -49,4 +59,19 @@ export function isResultError(value: unknown): value is ResultError {
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+export function statusToResultError(status: number, error:string): ResultError{
+ 
+    switch(status){
+      case 400: return makeError("BAD_REQUEST", error);
+      case 401: return makeError("UNAUTHORIZED", error);
+      case 403: return makeError("FORBIDDEN", error);
+      case 404: return makeError("NOT_FOUND", error);
+      case 405: return makeError("METHOD_NOT_ALLOWED", error);
+      case 409: return makeError("NOT_UNIQUE", error);
+      case 429: return makeError("RATE_LIMITED", error);
+    }
+
+  return makeError("INTERNAL_SERVER_ERROR", error);
 }
