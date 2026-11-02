@@ -12,7 +12,7 @@ export const seedData = async (env: Env) => {
 
   await db.delete(animals);
 
-  await db.insert(animals).values([
+  const seedAnimals = [
     {
       name: "Buster",
       species: Species.Dog,
@@ -283,7 +283,12 @@ export const seedData = async (env: Env) => {
       housingUnit: "F15",
       contactInfo: "",
     },
-  ]);
+
+  ];
+
+  for (let i = 0; i < seedAnimals.length; i += 8) {
+    await db.insert(animals).values(seedAnimals.slice(i, i+8));
+  };
 
   console.log("Seeding finished");
 };
