@@ -286,6 +286,7 @@ export const seedData = async (env: Env) => {
 
   ];
 
+  //drizzle crashes if you do 30 inserts
   for (let i = 0; i < seedAnimals.length; i += 8) {
     await db.insert(animals).values(seedAnimals.slice(i, i+8));
   };
