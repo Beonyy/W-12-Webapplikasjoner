@@ -2,27 +2,9 @@ import { beforeEach, describe, expect, test, it, vi } from "vitest";
 import { animalController, createAnimalController } from "../animal-controller";
 import { mockAnimalService } from "./mock-animal-services";
 
-import { RequestInfo } from "rwsdk/worker";
 import { isResult } from "@/shared/types/result";
 import { Animal, isAnimal } from "../animal-types";
-
-
-// straight outta chatgpt
-type RequestInfoOverrides = Partial<RequestInfo>;
-function createRequestInfo(
-    overrides: RequestInfoOverrides = {},
-): RequestInfo {
-    return {
-        request: new Request("https://example.com/"),
-        path: "/",
-        params: {},
-        ctx: {},
-        response: {
-            headers: new Headers(),
-        },
-        ...overrides,
-    } as RequestInfo;
-}
+import { createRequestInfo } from "./helpers";
 
 
 describe("createAnimalController.create", () => {
