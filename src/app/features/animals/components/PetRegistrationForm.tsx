@@ -42,30 +42,31 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     } 
 
     return (
-        <section>
+        <section className="newPetForm">
+            <h3>Registrer ditt kjæledyr</h3>
             <form onSubmit={handleSubmit}>
-                <label>Navn på kjæledyret:</label>
+                <label>Navn på kjæledyret:
                 <input 
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                />
+                /></label>
 
-                <label>Kallenavn:</label>
+                <label>Kallenavn:
                 <input
                     type="text"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
-                />
+                /></label>
 
-                <label>Fødselsdato:</label>
+                <label>Fødselsdato:
                 <input 
                     type="date"
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                />
+                /></label>
 
-                <label>Type dyr: </label>
+                <label>Type dyr: 
                 <select
                     value={species}
                     onChange={(e) => setSpecies(e.target.value as Species)}
@@ -76,37 +77,37 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                     <option value="Rabbit">Kanin</option>
                     <option value="Reptile">Reptil</option>
                     <option value="Fish">Fisk</option>
-                </select>
+                </select></label>
 
-                <label>Kjennetrekk: </label>
+                <label>Kjennetrekk: 
                 <input 
                     type="text"
                     value={characteristics}
                     onChange={(e) => setCharacteristics(e.target.value)}
-                />
+                /></label>
 
-                <label>Eier: </label>
+                <label>Eier: 
                 <input 
                     type="text"
                     value={owner}
                     onChange={(e) => setOwner(e.target.value)}
-                />
+                /></label>
 
-                <label>Adresse: </label>
+                <label>Adresse: 
                 <input 
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                />
+                /></label>
 
-                <label>Kontaktinformasjon: </label>
+                <label>Kontaktinformasjon:
                 <input
                     type="text"
                     value={contactInfo}
                     onChange={(e) => setContactInfo(e.target.value)}
-                />      
+                /></label>
 
-                <input type="submit" value="Register" />    
+                <input type="submit" value="Register" className="submitButton"/>    
             </form>
         </section>
     );

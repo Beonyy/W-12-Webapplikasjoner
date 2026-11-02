@@ -91,14 +91,15 @@ export default function PetFormPage() {
   }
 
   return (
-    <>
+    <main>
+      <h1>Petz4You</h1>
       <PetRegistration onRegister={handleRegister} />
 
       {loading && <p>Laster dyr...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <h2>Registrerte dyr</h2>
-      <ul>
+      <ul className="animalsList">
         {animals.map((animal, index) => (
           <li key={index}>
             Navn: {animal.name} <br />
@@ -120,6 +121,6 @@ export default function PetFormPage() {
           </li>
         ))}
       </ul>
-    </>
+    </main>
   );
 }

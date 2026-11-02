@@ -1,0 +1,35 @@
+main {
+    max-width: 80dvw;
+    margin: 0 5rem 0 5rem;
+
+    .newPetForm {
+        h3 {
+            margin:  0 0 0 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            label {
+                display: flex;
+                flex-direction: column;
+                margin: 0.3rem 0 0.3rem 0;
+            }
+            .submitButton {
+                margin: 0.3rem 0 0.3rem 0;
+                height: 2rem;
+            }
+        }
+    }
+
+    .animalsList {
+        display: flex;
+        flex-direction: column;
+
+        li {
+            br {
+                margin: 0 0.2rem 0 0.2rem;
+            }
+        }
+    }
+}
