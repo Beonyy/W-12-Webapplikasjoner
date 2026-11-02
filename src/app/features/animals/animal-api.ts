@@ -31,7 +31,7 @@ export function createAnimalApi(): AnimalApi{
             if(!response.ok){
                 return {success: false, error: {code:"INTERNAL_SERVER_ERROR", message:""}};
             }
-            return { success:true, data: await response.json() }
+            return await response.json();
         },
 
         async get(id:string): Promise<Result<Animal>>{

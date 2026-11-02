@@ -71,7 +71,7 @@ export function PetSearch() {
         return;
       }
 
-      const backendAnimals: BackendAnimal[] = result.data ?? [];
+      const backendAnimals: BackendAnimal[] = result.data;
       const uiAnimals: UiAnimal[] = backendAnimals.map(mapBackendToUi);
 
       setAllAnimals(uiAnimals);
