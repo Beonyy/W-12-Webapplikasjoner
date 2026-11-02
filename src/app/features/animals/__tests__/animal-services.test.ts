@@ -3,13 +3,20 @@ import { describe, expect, test } from "vitest";
 
 import { createAnimalService } from "../animal-services";
 import { mockAnimalRepository } from "./mock-animal-repository";
+import { makeMockDatabase } from "@/db/features/animals/__tests__/helpers";
+import { createAnimalRepository } from "@/db/features/animals/animal-repository";
 
 
 
 describe("create", () =>{
 
+
+
     test("create animal, animal returned", async ()=>{
-        const animService = createAnimalService(mockAnimalRepository)
+
+        const db = makeMockDatabase()
+        const repo = createAnimalRepository(db.db);
+        const animService = createAnimalService(repo)
 
         const params = {
             name:"Bartholomew",
@@ -32,6 +39,9 @@ describe("create", () =>{
             expect(data.housingUnit).toEqual(params.housingUnit);
             expect(data.contactInfo).toEqual(params.contactInfo);
         }
+
+        db.close();
+
     });
 });
 
