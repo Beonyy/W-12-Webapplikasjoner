@@ -50,10 +50,6 @@ export function isActionAuthorized( action : string, auth: string):boolean{
 }
 
 
-
-
-
-
 export interface AnimalController {
     list(request : RequestInfo): Promise<Response>;
     get(request : RequestInfo): Promise<Response>;
@@ -73,20 +69,10 @@ export function createAnimalController(service: AnimalService): AnimalController
                     { error:'not authorized'},
                     { status: 403},)
             }
-            let data : unknown 
-            try{
-                data = await request.json();
-            } catch{
-                return Response.json(
-                    { error:' Invalid JSON body'},
-                    { status: 400},
-                )
-            }
-            
-
+            const {keywords} = parseParams(request);
             return Response.json(await service.list(
                 auth,
-                typeof data === "string" ? data: undefined
+                keywords.length > 0 ? keywords: undefined
             ));
         },
         
