@@ -84,7 +84,7 @@ export default function PetFormPage() {
     }
 
     // Inntil create begynner å returnere Animal, bruker vi UI-objektet lokalt
-    setAnimals((prev) => [...prev, uiAnimal]);
+    setAnimals((prev) => [uiAnimal, ...prev]);
     console.log("Registrert nytt dyr:", uiAnimal);
 
     return result;
@@ -102,21 +102,68 @@ export default function PetFormPage() {
       <ul className="animalsList">
         {animals.map((animal, index) => (
           <li key={index}>
-            Navn: {animal.name} <br />
-            Kallenavn: {animal.nickname}
+            <span className="animalLabel">
+              Navn:
+            </span> 
+            <span className="animalValue">
+              {animal.name} 
+            </span> 
             <br />
-            Type dyr: {animal.species}
+
+            <span className="animalLabel">
+              Kallenavn:
+            </span> 
+            <span className="animalValue">
+              {animal.nickname}
+            </span> 
             <br />
-            Kjennetrekk: {animal.characteristics}
+
+            <span className="animalLabel">
+              Type dyr:
+            </span> 
+            <span className="animalValue">
+              {animal.species}
+            </span> 
             <br />
-            Alder: {calculateAge(animal.dateOfBirth)} år
+
+            <span className="animalLabel">
+              Kjennetrekk:
+            </span> 
+            <span className="animalValue">
+              {animal.characteristics}
+            </span> 
             <br />
-            Eier: {animal.owner}
+
+            <span className="animalLabel">
+              Alder:
+            </span> 
+            <span className="animalValue">
+              {calculateAge(animal.dateOfBirth)} år
+            </span> 
             <br />
-            Adresse: {animal.address}
+
+            <span className="animalLabel">
+              Eier:
+            </span> 
+            <span className="animalValue">
+              {animal.owner}
+            </span> 
             <br />
-            Kontaktinfo: {animal.contactInfo}
+
+            <span className="animalLabel">
+              Adresse:
+            </span> 
+            <span className="animalValue">
+              {animal.address}
+            </span> 
             <br />
+
+            <span className="animalLabel">
+              Kontaktinfo:
+            </span> 
+            <span className="animalValue">
+              {animal.contactInfo}
+            </span> 
             <br />
           </li>
         ))}
