@@ -6,6 +6,7 @@ import { animalApi } from "./animal-api";
 import type { Animal } from "./animal-types";
 import { AuthLayout } from "@/app/features/auth/AuthLayout";
 import { useRole } from "@/app/features/auth/RoleContext";
+import GlobalNavbar from "@/app/features/shared/GlobalNavbar";
 
 // Denne komponenten rendres inne i AuthLayout/RoleProvider
 function PetFormContent() {
@@ -42,6 +43,7 @@ function PetFormContent() {
 export default function PetFormPage() {
   return (
     <AuthLayout initialRole="user">
+      <GlobalNavbar/>
       <PetFormContent />
     </AuthLayout>
   );
