@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import { Species } from "../enum";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { createId } from "@paralleldrive/cuid2";
 import { Animal, AnimalCreateParams } from "@/app/features/animals/animal-types";
@@ -36,7 +37,7 @@ export function makeMockDatabase(): { db: AppDatabase; close: () => void } {
         created_at INTEGER NOT NULL,
         updated_at INTEGER    
         );
-    `);
+    `); 
 
     const db = drizzle({ client: sqlite, relations });
 
@@ -44,6 +45,20 @@ export function makeMockDatabase(): { db: AppDatabase; close: () => void } {
         db,
         close: () => sqlite.close(),
     };
+}
+
+export async function seedAnimal(db: AppDatabase, overrides: Partial<AnimalDb> = {}) {
+    const animal = makeAnimalDb(overrides);
+    const id: string = animal.id ?? createId();
+    await db.run(sql`
+        INSERT INTO animals (id, name, species, nickname, dateOfBirth, characteristics, housingUnit, contactInfo, profileImageUrl, deleted, created_at, updated_at)
+        VALUES (${id}, ${animal.name}, ${animal.species}, ${animal.nickname}, 
+        ${animal.dateOfBirth}, ${animal.characteristics}, ${animal.housingUnit}, 
+        ${animal.contactInfo}, ${animal.profileImageUrl}, ${animal.deleted ? 1 : 0}, 
+        ${Math.floor((animal.createdAt?.getTime() ?? Date.now()) / 1000)}, 
+        ${animal.updatedAt ? Math.floor(animal.updatedAt.getTime() / 1000) : null})
+    `);
+    return animal;
 }
 
 export function makeAnimalCreateParams(overrides: Partial<AnimalCreateParams> = {}): AnimalCreateParams {
@@ -64,16 +79,16 @@ export function makeAnimalDb(overrides: Partial<AnimalDb> = {}): AnimalDb {
         id: createId(),
         name: "Napolion",
         species: Species.Cat,
-        nickname: null,
-        dateOfBirth: null,
-        characteristics: null,
+        nickname: "",
+        dateOfBirth: "",
+        characteristics: "",
         housingUnit: "H1404",
-        contactInfo: null,
-        profileImageUrl: null,
+        contactInfo: "",
+        profileImageUrl: "",
         deleted: false,
         createdAt: new Date("2026-11-10T00:00:00Z"),
         updatedAt: null,
-        ...overrides,
+        ...overrides
     }
 }
 
