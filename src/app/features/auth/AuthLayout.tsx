@@ -9,9 +9,9 @@ type AuthLayoutProps = {
 export function AuthLayout({ children, initialRole = "user" }: AuthLayoutProps) {
   return (
     <RoleProvider initialRole={initialRole}>
-      <div style={{ padding: "1rem" }}>
-        <RoleSwitcher />
+      <div className="authLayout">
         {children}
+        <RoleSwitcher />
       </div>
     </RoleProvider>
   );

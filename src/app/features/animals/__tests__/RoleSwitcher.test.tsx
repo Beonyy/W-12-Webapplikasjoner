@@ -3,8 +3,8 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RoleProvider } from "@/app/auth/RoleContext";
-import { RoleSwitcher } from "@/app/auth/RoleSwitcher";
+import { RoleProvider } from "@/app/features/auth/RoleContext";
+import { RoleSwitcher } from "@/app/features/auth/RoleSwitcher";
 
 function renderWithRoleProvider(ui: React.ReactNode) {
   return render(<RoleProvider>{ui}</RoleProvider>);
