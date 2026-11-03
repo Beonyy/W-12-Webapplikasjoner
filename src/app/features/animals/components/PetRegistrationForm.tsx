@@ -7,7 +7,7 @@ import { Animal } from '../animal-types';
 
 // Props til PetRegistration 
 type PetRegistrationProps = {
-    onRegister?: (animal: Animal) => void; // Funksjonen som mottar et dyr når skjema sendes inn
+    onRegister: (animal: Animal) => Promise<boolean>; // Funksjonen som mottar et dyr når skjema sendes inn
 };
 
 
@@ -24,7 +24,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     const [contactInfo, setContactInfo] = useState("");
 
     // Submit-funksjonaliteten
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault(); // Hindre standard oppførsel (reload).
 
         // Bygger et Animal-objekt basert på gjeldende state.
@@ -39,8 +39,15 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
             profileImageUrl:""
         };
 
-        if (onRegister) {
-            onRegister(animal);
+        if (await onRegister(animal)) {
+            setName("");
+            setNickname("");
+            setDateOfBirth("");
+            setSpecies("Velg type dyr");
+            setCharacteristics("");
+            setCharacteristics("");
+            setHousingUnit("");
+            setContactInfo("");
         } 
     } 
 
