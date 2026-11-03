@@ -107,7 +107,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                     onChange={(e) => setContactInfo(e.target.value)}
                 /></label>
 
-                <input type="submit" value="Register" className="submitButton"/>    
+                <input type="submit" value="Registrer" className="submitButton"/>    
             </form>
         </section>
     );

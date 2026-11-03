@@ -5,13 +5,7 @@ import PetRegistration from "./components/PetRegistrationForm";
 import type { Animal as UiAnimal } from "./components/Animal";
 import { animalApi } from "./animal-api";
 import type { Animal as BackendAnimal, AnimalCreateParams } from "./animal-types";
-
-function calculateAge(dateOfBirth: string) {
-  const birthDate = new Date(dateOfBirth);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  return age;
-}
+import { calculateAge } from "./animal-utils";
 
 // Backend -> UI
 function mapBackendToUi(animal: BackendAnimal): UiAnimal {

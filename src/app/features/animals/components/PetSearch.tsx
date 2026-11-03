@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { animalApi } from "../animal-api";
-import AnimalProfil from "./AnimalProfil";
+import AnimalProfile from "./AnimalProfile";
 // Backend Animal-type
 import type { Animal as BackendAnimal } from "../animal-types";
 // UI Animal-type (den brukt i PetRegistration/PetFormPage)
@@ -104,7 +104,7 @@ export function PetSearch() {
   return (
     <div>
       <Filtering onFilterChange={handleFilterChange} />
-      <AnimalProfil animals={filteredAnimals} />
+      <AnimalProfile animals={filteredAnimals} />
     </div>
   );
 }
