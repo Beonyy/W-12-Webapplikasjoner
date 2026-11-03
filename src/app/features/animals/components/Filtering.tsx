@@ -26,9 +26,9 @@ export function Filtering({ onFilterChange }: FilteringProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="animalSearch">
       <label>
-        Søk etter dyr (navn, kallenavn, art, beskrivelse osv.):
+        Søk etter dyr:
         <input
           type="text"
           value={value}
@@ -36,7 +36,7 @@ export function Filtering({ onFilterChange }: FilteringProps) {
           placeholder="F.eks: sort katt hvite poter"
         />
       </label>
-      <button type="submit">Filtrer</button>
+      <button type="submit">Søk</button>
     </form>
   );
 }

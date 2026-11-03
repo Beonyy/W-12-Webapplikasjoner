@@ -1,12 +1,22 @@
 main {
     max-width: 80dvw;
-    margin: 0 5rem 0 5rem;
+    margin: 0 2rem 0 2rem;
+
+    h1{
+        margin: 1rem 0 0.2rem 0;
+        padding: 0 0 0 0;
+    }
+    p{
+        margin: 0 0 1rem 0;
+        padding: 0 0 0 0;
+    }
 
     .newPetForm {
         h3 {
             margin:  0 0 0 0;
         }
         form {
+            margin: 2rem 0 0 0;
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
@@ -14,10 +24,14 @@ main {
                 display: flex;
                 flex-direction: column;
                 margin: 0.3rem 0 0.3rem 0;
+                
+                input, select{
+                    min-height: 1.5rem;
+                }
             }
             .submitButton {
                 margin: 0.3rem 0 0.3rem 0;
-                height: 2rem;
+                min-height: 2rem;
             }
         }
     }
@@ -32,16 +46,13 @@ main {
             grid-template-columns: 1fr 2fr;
             grid-template-rows: repeat(7, auto);
             list-style: none;
-            border: 2px solid black;
+            border: 1.5px solid black;
             margin: 0.3rem 0 0.3rem 0;
             padding: 0.3rem;
-            br {
-                margin: 0 0.2rem 0 0.2rem;
-            }
 
             .animalLabel {
                 font-weight: 700;
-                padding: 0 0.2rem 0 0;
+                padding: 0.3rem 0.2rem 0 0;
                 grid-column: 1/2;
             }
 
@@ -49,5 +60,22 @@ main {
                 grid-column: 2/3;
             }
         }
+    }
+}
+
+#animalSearch{
+
+    padding: 2rem 0rem 2rem 0rem;
+        
+    label{
+        input{
+            min-width: 40dvw;
+            min-height: 1.5rem;
+        }
+    }
+    button{
+        margin: 0 0 0 0.3rem;
+        min-width: 2rem;
+        min-height: 1.9rem;
     }
 }

@@ -1,5 +1,5 @@
 import type { Animal as UiAnimal } from "../animal-types";
-import { calculateAge } from "../animal-utils";
+import { calculateAge, getSpeciesLabel } from "../animal-utils";
 
 type AnimalProfilProps = {
   animals: UiAnimal[];
@@ -30,7 +30,7 @@ export default function AnimalProfile({ animals }: AnimalProfilProps) {
               Type dyr:
             </span> 
             <span className="animalValue">
-              {animal.species}
+              {getSpeciesLabel(animal.species)}
             </span> 
             <br />
 
@@ -46,7 +46,7 @@ export default function AnimalProfile({ animals }: AnimalProfilProps) {
               Alder:
             </span> 
             <span className="animalValue">
-              {calculateAge(animal.dateOfBirth)} år
+              {calculateAge(animal.dateOfBirth)}
             </span> 
             <br />
 
