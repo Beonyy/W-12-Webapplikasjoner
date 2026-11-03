@@ -1,4 +1,4 @@
-import type { Animal as UiAnimal } from "./Animal";
+import type { Animal as UiAnimal } from "../animal-types";
 import { calculateAge } from "../animal-utils";
 
 type AnimalProfilProps = {
@@ -9,7 +9,7 @@ export default function AnimalProfile({ animals }: AnimalProfilProps) {
   return (
     <ul className="animalsList">
       {animals.map((animal, index) => (
-        <li key={animal.id ?? index}>
+        <li key={index}>
           <span className="animalLabel">
               Navn:
             </span> 
@@ -51,18 +51,10 @@ export default function AnimalProfile({ animals }: AnimalProfilProps) {
             <br />
 
             <span className="animalLabel">
-              Eier:
+              Boenhet:
             </span> 
             <span className="animalValue">
-              {animal.owner}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Adresse:
-            </span> 
-            <span className="animalValue">
-              {animal.address}
+              {animal.housingUnit}
             </span> 
             <br />
 
