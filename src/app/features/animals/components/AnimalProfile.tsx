@@ -46,7 +46,7 @@ export default function AnimalProfile({ animals }: AnimalProfilProps) {
               Alder:
             </span> 
             <span className="animalValue">
-              {calculateAge(animal.dateOfBirth)} år
+              {calculateAge(animal.dateOfBirth)}
             </span> 
             <br />
 
