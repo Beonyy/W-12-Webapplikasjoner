@@ -53,6 +53,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     return (
         <section className="newPetForm">
             <h1>Registrer ditt kjæledyr</h1>
+            <p><em>Felter merket med * er påkrevd.</em></p>
             <form onSubmit={handleSubmit}>
                 <label>Navn på kjæledyret*
                     <input 
@@ -115,7 +116,6 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                 </label>
                 <input type="submit" value="Registrer" className="submitButton" />    
             </form>
-            <p>Felter merket med * er påkrevd.</p>
         </section>
     );
 }
