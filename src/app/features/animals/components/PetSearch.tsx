@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { animalApi } from "../animal-api";
-import AnimalProfil from "./AnimalProfil";
+import AnimalProfile from "./AnimalProfile";
 import type { Animal } from "../animal-types";
 import { Filtering } from "./Filtering";
 import { useRole } from "@/app/auth/RoleContext";
@@ -87,7 +87,7 @@ export function PetSearch() {
   return (
     <div>
       <Filtering onFilterChange={handleFilterChange} />
-      <AnimalProfil animals={filteredAnimals} />
+      <AnimalProfile animals={filteredAnimals} />
     </div>
   );
 }

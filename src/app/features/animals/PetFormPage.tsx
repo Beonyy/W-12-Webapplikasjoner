@@ -6,13 +6,7 @@ import { animalApi } from "./animal-api";
 import type { Animal } from "./animal-types";
 import { AuthLayout } from "@/app/auth/AuthLayout";
 import { useRole } from "@/app/auth/RoleContext";
-
-function calculateAge(dateOfBirth: string) {
-  const birthDate = new Date(dateOfBirth);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  return age;
-}
+import { calculateAge } from "./animal-utils";
 
 // Denne komponenten rendres INNI AuthLayout/RoleProvider
 function PetFormContent() {
@@ -60,35 +54,85 @@ function PetFormContent() {
   }
 
   return (
-    <>
+    <main>
+      <h1>Petz4You</h1>
       <PetRegistration onRegister={handleRegister} />
 
       {loading && <p>Laster dyr...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <h2>Registrerte dyr</h2>
-      <ul>
+      <ul className="animalsList">
         {animals.map((animal, index) => (
           <li key={index}>
-            Navn: {animal.name} <br />
-            Kallenavn: {animal.nickname}
+            <span className="animalLabel">
+              Navn:
+            </span> 
+            <span className="animalValue">
+              {animal.name} 
+            </span> 
             <br />
-            Type dyr: {animal.species}
+
+            <span className="animalLabel">
+              Kallenavn:
+            </span> 
+            <span className="animalValue">
+              {animal.nickname}
+            </span> 
             <br />
-            Kjennetrekk: {animal.characteristics}
+
+            <span className="animalLabel">
+              Type dyr:
+            </span> 
+            <span className="animalValue">
+              {animal.species}
+            </span> 
             <br />
-            Alder: {calculateAge(animal.dateOfBirth)} år
+
+            <span className="animalLabel">
+              Kjennetrekk:
+            </span> 
+            <span className="animalValue">
+              {animal.characteristics}
+            </span> 
             <br />
+
+            <span className="animalLabel">
+              Alder:
+            </span> 
+            <span className="animalValue">
+              {calculateAge(animal.dateOfBirth)} år
+            </span> 
             <br />
             Boenhet: {animal.housingUnit}
+
+            <span className="animalLabel">
+              Eier:
+            </span> 
+            <span className="animalValue">
+              {animal.owner}
+            </span> 
             <br />
-            Kontaktinfo: {animal.contactInfo}
+
+            <span className="animalLabel">
+              Adresse:
+            </span> 
+            <span className="animalValue">
+              {animal.address}
+            </span> 
             <br />
+
+            <span className="animalLabel">
+              Kontaktinfo:
+            </span> 
+            <span className="animalValue">
+              {animal.contactInfo}
+            </span> 
             <br />
           </li>
         ))}
       </ul>
-    </>
+    </main>
   );
 }
 
