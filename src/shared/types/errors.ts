@@ -14,14 +14,6 @@ export const Errors = {
 
 export type ErrorCode = keyof typeof Errors;
 
-
-const errorCodes = new Set<string>(Object.keys(Errors));
-
-export function isErrorCode(value: unknown): value is ErrorCode {
-  return typeof value === "string" && errorCodes.has(value);
-}
-
-
 const errorCodes = new Set<string>(Object.keys(Errors));
 
 export function isErrorCode(value: unknown): value is ErrorCode {
