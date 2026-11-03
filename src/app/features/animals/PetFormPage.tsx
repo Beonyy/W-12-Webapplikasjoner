@@ -5,27 +5,8 @@ import PetRegistration from "./components/PetRegistrationForm";
 import type { Animal as UiAnimal } from "./components/Animal";
 import { animalApi } from "./animal-api";
 import type { Animal as BackendAnimal, AnimalCreateParams } from "./animal-types";
-import { calculateAge } from "./animal-utils";
-
-// Backend -> UI
-function mapBackendToUi(animal: BackendAnimal): UiAnimal {
-  const dobString =
-    animal.dateOfBirth instanceof Date
-      ? animal.dateOfBirth.toISOString().slice(0, 10)
-      : String(animal.dateOfBirth);
-
-  return {
-    id: undefined,
-    name: animal.name,
-    nickname: animal.nickname,
-    dateOfBirth: dobString,
-    species: animal.species as UiAnimal["species"],
-    characteristics: animal.characteristics.join(", "),
-    owner: animal.housingUnit,
-    address: "",
-    contactInfo: animal.contactInfo,
-  };
-}
+import { mapBackendToUi } from "./animal-utils";
+import AnimalProfile from "./components/AnimalProfile";
 
 // UI -> Backend (for create)
 function mapUiToBackend(animal: UiAnimal): AnimalCreateParams {
@@ -93,75 +74,7 @@ export default function PetFormPage() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <h2>Registrerte dyr</h2>
-      <ul className="animalsList">
-        {animals.map((animal, index) => (
-          <li key={index}>
-            <span className="animalLabel">
-              Navn:
-            </span> 
-            <span className="animalValue">
-              {animal.name} 
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Kallenavn:
-            </span> 
-            <span className="animalValue">
-              {animal.nickname}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Type dyr:
-            </span> 
-            <span className="animalValue">
-              {animal.species}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Kjennetrekk:
-            </span> 
-            <span className="animalValue">
-              {animal.characteristics}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Alder:
-            </span> 
-            <span className="animalValue">
-              {calculateAge(animal.dateOfBirth)} år
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Eier:
-            </span> 
-            <span className="animalValue">
-              {animal.owner}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Adresse:
-            </span> 
-            <span className="animalValue">
-              {animal.address}
-            </span> 
-            <br />
-
-            <span className="animalLabel">
-              Kontaktinfo:
-            </span> 
-            <span className="animalValue">
-              {animal.contactInfo}
-            </span> 
-            <br />
-          </li>
-        ))}
-      </ul>
+      <AnimalProfile animals={animals} />
     </main>
   );
 }

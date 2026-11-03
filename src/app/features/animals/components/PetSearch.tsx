@@ -3,31 +3,12 @@
 import { useEffect, useState } from "react";
 import { animalApi } from "../animal-api";
 import AnimalProfile from "./AnimalProfile";
+import { Filtering } from "./Filtering";
 // Backend Animal-type
 import type { Animal as BackendAnimal } from "../animal-types";
 // UI Animal-type (den brukt i PetRegistration/PetFormPage)
 import type { Animal as UiAnimal } from "./Animal";
-import { Filtering } from "./Filtering";
-
-// Samme mapping som i Animals.tsx
-function mapBackendToUi(a: BackendAnimal): UiAnimal {
-  const dobString =
-    a.dateOfBirth instanceof Date
-      ? a.dateOfBirth.toISOString().slice(0, 10)
-      : String(a.dateOfBirth);
-
-  return {
-    id: undefined,
-    name: a.name,
-    nickname: a.nickname,
-    dateOfBirth: dobString,
-    species: a.species as UiAnimal["species"],
-    characteristics: a.characteristics.join(", "),
-    owner: a.housingUnit,
-    address: "",
-    contactInfo: a.contactInfo,
-  };
-}
+import { mapBackendToUi } from "../animal-utils";
 
 function animalMatchesWords(animal: UiAnimal, words: string[]): boolean {
   if (words.length === 0) {
