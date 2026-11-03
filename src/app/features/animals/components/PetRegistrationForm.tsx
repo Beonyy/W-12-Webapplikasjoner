@@ -43,7 +43,6 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
 
     return (
         <section className="newPetForm">
-            <h3>Registrer ditt kjæledyr</h3>
             <form onSubmit={handleSubmit}>
                 <label>Navn på kjæledyret:
                 <input 

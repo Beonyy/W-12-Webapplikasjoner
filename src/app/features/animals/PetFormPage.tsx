@@ -67,7 +67,8 @@ export default function PetFormPage() {
 
   return (
     <main>
-      <h1>Petz4You</h1>
+      <h2>Petz4You</h2>
+      <h1>Registrer ditt kjæledyr</h1>
       <PetRegistration onRegister={handleRegister} />
 
       {loading && <p>Laster dyr...</p>}
