@@ -5,7 +5,7 @@ import { animalApi } from "../animal-api";
 import AnimalProfile from "./AnimalProfile";
 import type { Animal } from "../animal-types";
 import { Filtering } from "./Filtering";
-import { useRole } from "@/app/auth/RoleContext";
+import { useRole } from "@/app/features/auth/RoleContext";
 
 export function PetSearch() {
   const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
@@ -56,6 +56,7 @@ export function PetSearch() {
   return (
     <div>
       <Filtering onFilterChange={handleFilterChange} />
+      {filteredAnimals.length === 0 && <p>Ingen treff.</p>}
       <AnimalProfile animals={filteredAnimals} />
     </div>
   );

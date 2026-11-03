@@ -4,8 +4,8 @@ import { useState } from "react";
 import PetRegistration from "./components/PetRegistrationForm";
 import { animalApi } from "./animal-api";
 import type { Animal } from "./animal-types";
-import { AuthLayout } from "@/app/auth/AuthLayout";
-import { useRole } from "@/app/auth/RoleContext";
+import { AuthLayout } from "@/app/features/auth/AuthLayout";
+import { useRole } from "@/app/features/auth/RoleContext";
 
 // Denne komponenten rendres inne i AuthLayout/RoleProvider
 function PetFormContent() {

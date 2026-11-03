@@ -1,5 +1,5 @@
-import { RoleProvider, Role } from "@/app/auth/RoleContext";
-import { RoleSwitcher } from "@/app/auth/RoleSwitcher";
+import { RoleProvider, Role } from "@/app/features/auth/RoleContext";
+import { RoleSwitcher } from "@/app/features/auth/RoleSwitcher";
 
 type AuthLayoutProps = {
   children: React.ReactNode;

@@ -2,7 +2,7 @@
 
 
 import { PetSearch } from "./components/PetSearch"
-import { AuthLayout } from "@/app/auth/AuthLayout";
+import { AuthLayout } from "@/app/features/auth/AuthLayout";
 
 export default function PetSearchPage() {
   return (

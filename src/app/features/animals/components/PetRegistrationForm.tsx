@@ -10,7 +10,6 @@ type PetRegistrationProps = {
     onRegister: (animal: Animal) => Promise<boolean>; // Funksjonen som mottar et dyr når skjema sendes inn
 };
 
-
 // const TEMP_AUTH = "user"
 
 export default function PetRegistration ({ onRegister }: Readonly<PetRegistrationProps>) {
@@ -18,7 +17,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
     const [name, setName] = useState("");
     const [nickname, setNickname] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
-    const [species, setSpecies] = useState<Species>("Velg type dyr");
+    const [species, setSpecies] = useState<Species | "">("");
     const [characteristics, setCharacteristics] = useState("");
     const [housingUnit, setHousingUnit] = useState("");
     const [contactInfo, setContactInfo] = useState("");
@@ -43,7 +42,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
             setName("");
             setNickname("");
             setDateOfBirth("");
-            setSpecies("Velg type dyr");
+            setSpecies("");
             setCharacteristics("");
             setCharacteristics("");
             setHousingUnit("");
@@ -55,32 +54,35 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
         <section className="newPetForm">
             <h1>Registrer ditt kjæledyr</h1>
             <form onSubmit={handleSubmit}>
-                <label>Navn på kjæledyret:
+                <label>Navn på kjæledyret*
                     <input 
                         type="text"
+                        required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
                 </label>
-                <label>Kallenavn:
+                <label>Kallenavn
                     <input
                         type="text"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                     />
                 </label>
-                <label>Fødselsdato:
+                <label>Fødselsdato
                     <input 
                         type="date"
                         value={dateOfBirth}
                         onChange={(e) => setDateOfBirth(e.target.value)}
                     />
                 </label>
-                <label>Type dyr: 
+                <label>Type dyr*
                     <select
+                        required
                         value={species}
-                        onChange={(e) => setSpecies(e.target.value as Species)}
+                        onChange={(e) => setSpecies(e.target.value as Species | "")}
                     >
+                        <option value="" disabled>Velg type dyr</option>
                         <option value="Dog">Hund</option>
                         <option value="Cat">Katt</option>
                         <option value="Bird">Fugl</option>
@@ -89,21 +91,22 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                         <option value="Fish">Fisk</option>
                     </select>
                 </label>
-                <label>Kjennetrekk: 
+                <label>Kjennetrekk
                     <input 
                         type="text"
                         value={characteristics}
                         onChange={(e) => setCharacteristics(e.target.value)}
                     />
                 </label>
-                <label>Boenhet: 
+                <label>Boenhet*
                     <input 
                         type="text"
+                        required
                         value={housingUnit}
                         onChange={(e) => setHousingUnit(e.target.value)}
                     />
                 </label>
-                <label>Kontaktinformasjon: 
+                <label>Kontaktinformasjon
                     <input
                         type="text"
                         value={contactInfo}
@@ -112,6 +115,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                 </label>
                 <input type="submit" value="Registrer" className="submitButton" />    
             </form>
+            <p>Felter merket med * er påkrevd.</p>
         </section>
     );
 }

@@ -28,7 +28,7 @@ export function Filtering({ onFilterChange }: FilteringProps) {
   return (
     <form onSubmit={handleSubmit} id="animalSearch">
       <label>
-        Søk etter dyr (navn, kallenavn, art, beskrivelse osv.):
+        Søk etter dyr:
         <input
           type="text"
           value={value}
