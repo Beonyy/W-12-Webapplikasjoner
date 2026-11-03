@@ -22,7 +22,7 @@ function PetFormContent() {
 
     if (!result.success) {
       console.error("API ERROR:", result.error.message);
-      setError("Kunne ikke registrere dyr i API-et." + result.error.message);
+      setError("Kunne ikke registrere dyr i API-et. " + result.error.message);
       return false;
     }
 
@@ -32,7 +32,6 @@ function PetFormContent() {
 
   return (
     <main>
-      <h1>Petz4You</h1>
       <PetRegistration onRegister={handleRegister} />
       {error && <p role="alert" style={{ color: "red" }}>{error}</p>}
       {success && <p role="status">Dyret ble registrert.</p>}

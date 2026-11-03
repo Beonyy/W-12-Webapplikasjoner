@@ -8,9 +8,8 @@ export default function PetSearchPage() {
   return (
     <AuthLayout>
       <main>
-        
         <h1>Dyreprofiler</h1>
-        <p>Her ser du alle registrerte dyr i systemet.</p>
+        <p>Her kan du søke blant alle registrerte dyr i systemet.</p>
         <PetSearch />
       </main>
     </AuthLayout>

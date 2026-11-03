@@ -53,7 +53,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
 
     return (
         <section className="newPetForm">
-            <h3>Registrer ditt kjæledyr</h3>
+            <h1>Registrer ditt kjæledyr</h1>
             <form onSubmit={handleSubmit}>
                 <label>Navn på kjæledyret:
                     <input 
@@ -110,7 +110,7 @@ export default function PetRegistration ({ onRegister }: Readonly<PetRegistratio
                         onChange={(e) => setContactInfo(e.target.value)}
                     />      
                 </label>
-                <input type="submit" value="Register" />    
+                <input type="submit" value="Registrer" className="submitButton" />    
             </form>
         </section>
     );
