@@ -8,9 +8,10 @@ import { AnimalRepository } from "../../../db/features/animals/animal-repository
 import { animalRepository } from "../../../db/features/animals/animal-repository"
 import { Animal, AnimalCreateParams } from "./animal-types";
 import { toAnimal } from "./animal-mappers";
+import { AnimalDb } from "@/db/features/animals/animal-types";
 
 export interface AnimalService {
-    list(sessionToken: string): Promise<Result<Animal[]>>;
+    list(sessionToken: string, keywords?:string): Promise<Result<Animal[]>>;
     get(sessionToken: string, id: string): Promise<Result<Animal>>;
     create(sessionToken: string, input: AnimalCreateParams): Promise<Result<Animal>>;
     update(sessionToken: string, id: string, input: any): Promise<Result<Animal>>;
@@ -20,10 +21,16 @@ export interface AnimalService {
 //TODO: animal type instead of any
 export function createAnimalService(repository: AnimalRepository): AnimalService{
     return {
-        async list(sessionToken: string){
+        async list(sessionToken: string, keywords?:string){
             //TODO: validation
             //TODO: more internal logic ?
-            const result = await repository.getAll();
+            let result : Result<AnimalDb[]>
+            if(keywords){
+                result = await repository.searchByKeywords(keywords);
+            }else{
+                result = await repository.getAll();
+            }
+
             if (!result.success) return result;
 
             return {
