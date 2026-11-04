@@ -18,7 +18,7 @@ export function parseParams(request:Request){
 // NOTE: auth types should obviously be something else in prod.
 export function isAuthenticated(auth: string|null):boolean{
     if ( auth === null ) return false;
-    return (auth !== "none");
+    return (auth === "user" || auth  === "admin");
 }
 
 // NOTE: should be moved somewhere else! This is only a temporary home
