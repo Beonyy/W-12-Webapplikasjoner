@@ -16,6 +16,13 @@ export function parseParams(request:Request){
 
 // NOTE: should be moved somewhere else! This is only a temporary home
 // NOTE: auth types should obviously be something else in prod.
+export function isAuthenticated(auth: string|null):boolean{
+    if ( auth === null ) return false;
+    return (auth === "user" || auth  === "admin");
+}
+
+// NOTE: should be moved somewhere else! This is only a temporary home
+// NOTE: auth types should obviously be something else in prod.
 export function isActionAuthorized( action : string, auth: string):boolean{
     switch (action){
         case "list":
@@ -62,13 +69,19 @@ export interface AnimalController {
 export function createAnimalController(service: AnimalService): AnimalController{
     return {
         async list({request}:RequestInfo){
-
             const auth = request.headers.get("Authorization")
+            if(!isAuthenticated(auth)){
+                return Response.json(
+                    { error:'unauthorized'},
+                    { status: 401},)
+            }
+
             if (!auth || !isActionAuthorized("list", auth)){
                 return Response.json(
-                    { error:'not authorized'},
+                    { error:'forbidden'},
                     { status: 403},)
             }
+            
             const {keywords} = parseParams(request);
             return Response.json(await service.list(
                 auth,
@@ -78,9 +91,14 @@ export function createAnimalController(service: AnimalService): AnimalController
         
         async get({request}:RequestInfo){
             const auth = request.headers.get("Authorization")
+            if(!isAuthenticated(auth)){
+                return Response.json(
+                    { error:'unauthorized'},
+                    { status: 401},)
+            }
             if (!auth || !isActionAuthorized("get", auth)){
                 return Response.json(
-                    { error:'not authorized'},
+                    { error:'forbidden'},
                     { status: 403},)
             }
             const params = parseParams(request)
@@ -100,9 +118,14 @@ export function createAnimalController(service: AnimalService): AnimalController
         
         async create({request}:RequestInfo){
             const auth = request.headers.get("Authorization")
+            if(!isAuthenticated(auth)){
+                return Response.json(
+                    { error:'unauthorized'},
+                    { status: 401},)
+            }
             if (!auth || !isActionAuthorized("create", auth)){
                 return Response.json(
-                    { error:'not authorized'},
+                    { error:'forbidden'},
                     { status: 403},)
             }
 
@@ -127,9 +150,14 @@ export function createAnimalController(service: AnimalService): AnimalController
         
         async update({request}:RequestInfo)  {
             const auth = request.headers.get("Authorization")
+            if(!isAuthenticated(auth)){
+                return Response.json(
+                    { error:'unauthorized'},
+                    { status: 401},)
+            }
             if (!auth || !isActionAuthorized("update", auth)){
                 return Response.json(
-                    { error:'not authorized'},
+                    { error:'forbidden'},
                     { status: 403},)
             }
 
@@ -156,21 +184,31 @@ export function createAnimalController(service: AnimalService): AnimalController
         async action({request} : RequestInfo)  {
             // TODO: no actions currently, so....
             // const auth = request.headers.get("Authorization")
+            // if(!isAuthenticated(auth)){
+            //     return Response.json(
+            //         { error:'unauthorized'},
+            //         { status: 401},)
+            // }
             // if (!auth || !isActionAuthorized("action", auth)){
             //     return Response.json(
             //         { error:'not authorized'},
             //         { status: 403},)
             // }
             return Response.json(
-                {error:' Invalid request body'},
-                { status: 400},)
+                {error:'not implemented'},
+                { status: 501},)
             },
 
         async remove({request}:RequestInfo)  {
             const auth = request.headers.get("Authorization")
+            if(!isAuthenticated(auth)){
+                return Response.json(
+                    { error:'unauthorized'},
+                    { status: 401},)
+            }
             if (!auth || !isActionAuthorized("remove", auth)){
                 return Response.json(
-                    { error:'not authorized'},
+                    { error:'forbidden'},
                     { status: 403},)
             }
             const params = parseParams(request);
