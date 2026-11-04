@@ -24,13 +24,12 @@ describe("RoleSwitcher", () => {
     expect(userBtn).toBeInTheDocument();
     expect(adminBtn).toBeInTheDocument();
 
-    // Default er initialRole i RoleProvider (hos deg: "none" eller "user" avhengig av hva du satte)
-    expect(screen.getByText(/Nåværende:/)).toHaveTextContent("user");
+    expect(screen.getByText(/Nåværende rolle:/)).toHaveTextContent("user");
 
     await user.click(noneBtn);
-    expect(screen.getByText(/Nåværende:/)).toHaveTextContent("none");
+    expect(screen.getByText(/Nåværende rolle:/)).toHaveTextContent("none");
 
     await user.click(adminBtn);
-    expect(screen.getByText(/Nåværende:/)).toHaveTextContent("admin");
+    expect(screen.getByText(/Nåværende rolle:/)).toHaveTextContent("admin");
   });
 });
