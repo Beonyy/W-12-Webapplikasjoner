@@ -14,35 +14,35 @@ describe("PetRegistrationForm", () => {
     render(<PetRegistration onRegister={handleRegister} />);
 
     await user.type(
-      screen.getByLabelText("Navn på kjæledyret:"),
+      screen.getByLabelText("Navn på kjæledyret*"),
       "Mao"
     );
     await user.type(
-      screen.getByLabelText("Kallenavn:"),
+      screen.getByLabelText("Kallenavn"),
       "Kjøttrull"
     );
     await user.type(
-      screen.getByLabelText("Fødselsdato:"),
+      screen.getByLabelText("Fødselsdato"),
       "2019-11-04"
     );
     await user.selectOptions(
-      screen.getByLabelText("Type dyr:"),
+      screen.getByLabelText("Type dyr*"),
       "Cat"
     );
     await user.type(
-      screen.getByLabelText("Kjennetrekk:"),
+      screen.getByLabelText("Kjennetrekk"),
       "Fremtidig verdenshersker"
     );
     await user.type(
-      screen.getByLabelText("Boenhet:"),
+      screen.getByLabelText("Boenhet*"),
       "Hemmelig"
     );
     await user.type(
-      screen.getByLabelText("Kontaktinformasjon:"),
+      screen.getByLabelText("Kontaktinformasjon"),
       "kari.nordmann@example.com"
     );
 
-    await user.click(screen.getByRole("button", { name: /register/i }));
+    await user.click(screen.getByRole("button", { name: /Registrer/i }));
 
     expect(handleRegister).toHaveBeenCalledTimes(1);
 
