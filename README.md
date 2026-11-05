@@ -32,16 +32,12 @@ Enhetstestene bruker lagdelingen for å isolere metodene.
 
 ```bash
 pnpm install   
+pnpm migrate:dev    # lager tabellene i den lokale databasen
+pnpm seed           # legger inn litt testdata
 pnpm dev       
 ```
 
 Åpne `http://localhost:5173`.
-
-
-```bash
-pnpm migrate:dev    # lager tabellene i den lokale databasen
-pnpm seed           # legger inn litt testdata
-```
 
 ## Tester
 

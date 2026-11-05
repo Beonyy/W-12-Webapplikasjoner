@@ -1,10 +1,3 @@
-// Her inne lager vi funksjoner som brukes i komponenter for å kalle
-// Vårt api eller eksternt api
-
-// Bruker ex. apiFetch, axios e.l
-
-// Håndterer feil som kan oppstå med fetch og har en konsistent måte å gjøre dette på
-
 import { makeError} from "@/shared/types/errors";
 import { Animal, AnimalCreateParams, isAnimal, isAnimalArray } from "./animal-types";
 import { Result } from "@/shared/types/result";
